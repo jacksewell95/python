@@ -65,21 +65,7 @@ def get_distinct_cords_lists():
         
     return distinct_cords_lists
 
-# grid = [[4,0,0,0,0,0,0,0,0],
-#         [0,0,0,0,0,9,0,0,0],
-#         [0,0,0,0,0,0,7,8,5],
-#         [0,0,7,0,4,8,0,5,0],
-#         [0,0,1,3,0,0,0,0,0],
-#         [0,0,6,0,7,0,0,0,0],
-#         [8,6,0,0,0,0,9,0,3],
-#         [7,0,0,0,0,5,0,6,2],
-#         [0,0,3,7,0,0,0,0,0]]
-
 def get_lists(grid, row, col):
-    
-#     global row_list
-#     global col_list
-#     global square_list
     
     row_list = [num for num in grid[row] if num != 0]
     col_list = [x[col] for x in grid if x[col] != 0]
@@ -158,8 +144,6 @@ def get_possibilities(mode):
 
 def assess_dupe_error():
     
-#     global dupe_error
-    
     dupe_error = False
     
     lists = []
@@ -174,8 +158,6 @@ def assess_dupe_error():
     return dupe_error
 
 def assess_homeless_error():
-    
-#     global homeless_error
     
     homeless_error = False
     
@@ -209,15 +191,7 @@ def assess_homeless_error():
         
     return homeless_error
 
-def get_most_recent_guess():      
-    
-    global most_recent_guess_index
-    global most_recent_guess
-    
-    global cord
-    global last_guess
-    global all_poss
-    global failed_guesses
+def get_most_recent_guess():  
     
     guess_list = []
     
@@ -373,7 +347,7 @@ while len(poss_empty_cords_lol) > 0 and loops < loops_limit:
 #         print('')
         #######################################################################################################
         
-        get_most_recent_guess()
+        most_recent_guess_index, most_recent_guess, cord, last_guess, all_poss, failed_guesses = get_most_recent_guess()
         
         failed_guesses.append(last_guess)
         
