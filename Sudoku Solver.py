@@ -65,21 +65,21 @@ def get_distinct_cords_lists():
         
     return distinct_cords_lists
 
-grid = [[4,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,9,0,0,0],
-        [0,0,0,0,0,0,7,8,5],
-        [0,0,7,0,4,8,0,5,0],
-        [0,0,1,3,0,0,0,0,0],
-        [0,0,6,0,7,0,0,0,0],
-        [8,6,0,0,0,0,9,0,3],
-        [7,0,0,0,0,5,0,6,2],
-        [0,0,3,7,0,0,0,0,0]]
+# grid = [[4,0,0,0,0,0,0,0,0],
+#         [0,0,0,0,0,9,0,0,0],
+#         [0,0,0,0,0,0,7,8,5],
+#         [0,0,7,0,4,8,0,5,0],
+#         [0,0,1,3,0,0,0,0,0],
+#         [0,0,6,0,7,0,0,0,0],
+#         [8,6,0,0,0,0,9,0,3],
+#         [7,0,0,0,0,5,0,6,2],
+#         [0,0,3,7,0,0,0,0,0]]
 
-def get_lists(row, col):
+def get_lists(grid, row, col):
     
-    global row_list
-    global col_list
-    global square_list
+#     global row_list
+#     global col_list
+#     global square_list
     
     row_list = [num for num in grid[row] if num != 0]
     col_list = [x[col] for x in grid if x[col] != 0]
@@ -99,7 +99,7 @@ def find_values(cell_row, cell_col, skip_values=[]):
     
     global possible_values
     
-    lists = get_lists(cell_row, cell_col)
+    row_list, col_list, square_list = get_lists(grid, cell_row, cell_col)
     
     possible_values = []
     
@@ -158,7 +158,7 @@ def get_possibilities(mode):
 
 def assess_dupe_error():
     
-    global dupe_error
+#     global dupe_error
     
     dupe_error = False
     
@@ -166,7 +166,7 @@ def assess_dupe_error():
     
     for cord in cords:
         row, col = cord[0], cord[1]
-        get_lists(row, col)
+        row_list, col_list, square_list = get_lists(grid, row, col)
         for list in [row_list, col_list, square_list]:
             if len(list) != len(set(list)):
                 dupe_error = True
@@ -175,7 +175,7 @@ def assess_dupe_error():
 
 def assess_homeless_error():
     
-    global homeless_error
+#     global homeless_error
     
     homeless_error = False
     
@@ -355,8 +355,8 @@ while len(poss_empty_cords_lol) > 0 and loops < loops_limit:
 #     print('New loop! ##########################################################################')
 #     print('')
     
-    assess_dupe_error()
-    assess_homeless_error()
+    dupe_error = assess_dupe_error()
+    homeless_error = assess_homeless_error()
     # 1. Undo incorrect previous guess
     
     if len(zero_poss_empty_cords_lol) > 0 or dupe_error or homeless_error:
