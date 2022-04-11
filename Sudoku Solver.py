@@ -111,10 +111,6 @@ def show_guesses():
     print('')
     
 def get_possibilities(mode):
-    
-    global poss_empty_cords_lol
-    global one_poss_empty_cords_lol
-    global zero_poss_empty_cords_lol
 
     poss_empty_cords_lol = []
     
@@ -122,21 +118,37 @@ def get_possibilities(mode):
         row, col = cord[0], cord[1]
         if grid[row][col] == 0:
             find_values(row, col)
-            poss_empty_cords_lol.append([cord, row, col, possible_values, len(possible_values)])
-
-    poss_empty_cords_columns = ['cord','row','col','possible_values','possibilities']
-    poss_empty_cords_df = pd.DataFrame(poss_empty_cords_lol, columns=poss_empty_cords_columns)
+            
+            poss_empty_cords_lol.append({
+                'cord'            : cord, 
+                'row'             : row, 
+                'col'             : col, 
+                'possible_values' : possible_values, 
+                'possibilities'   : len(possible_values)
+            })
+    
+    if len(poss_empty_cords_lol) > 0:
+        poss_empty_cords_df = pd.DataFrame(poss_empty_cords_lol)
+    else:
+        poss_empty_cords_df = pd.DataFrame([{
+                'cord'            : None, 
+                'row'             : None, 
+                'col'             : None, 
+                'possible_values' : None, 
+                'possibilities'   : None
+            }])
     
     if mode == 'quick':
         sort_by = ['possibilities','row','col']
     elif mode == 'relentless':
         sort_by = ['row','col']
     
+    print(poss_empty_cords_df.columns.tolist())
+    
     poss_empty_cords_df.sort_values(by=sort_by, axis=0, ascending=True, inplace=True)
     
     poss_empty_cords_df.reset_index(drop=True, inplace=True)
     
-    poss_empty_cords_lol = poss_empty_cords_df.values.tolist()
     one_poss_empty_cords_lol = poss_empty_cords_df[poss_empty_cords_df['possibilities'] == 1].values.tolist()
     zero_poss_empty_cords_lol = poss_empty_cords_df[poss_empty_cords_df['possibilities'] == 0].values.tolist()
     
@@ -208,10 +220,10 @@ def get_most_recent_guess():
             
     cord = most_recent_guess['cord']
     last_guess = most_recent_guess['guess']
-    all_poss = most_recent_guess['all_poss']
+    possible_values = most_recent_guess['possible_values']
     failed_guesses = most_recent_guess['failed_guesses']
         
-    return most_recent_guess_index, most_recent_guess, cord, last_guess, all_poss, failed_guesses
+    return most_recent_guess_index, most_recent_guess, cord, last_guess, possible_values, failed_guesses
 
 grids = {
 
@@ -322,7 +334,7 @@ for row in grid:
 mode = 'quick'
 # mode = 'relentless'
 
-get_possibilities(mode)
+poss_empty_cords_lol, one_poss_empty_cords_lol, zero_poss_empty_cords_lol = get_possibilities(mode)
 
 guesses = {}
 loops = 0
@@ -351,7 +363,7 @@ while len(poss_empty_cords_lol) > 0 and loops < loops_limit:
 #         print('')
         #######################################################################################################
         
-        most_recent_guess_index, most_recent_guess, cord, last_guess, all_poss, failed_guesses = get_most_recent_guess()
+        most_recent_guess_index, most_recent_guess, cord, last_guess, possible_values, failed_guesses = get_most_recent_guess()
         
         failed_guesses.append(last_guess)
         
@@ -366,7 +378,7 @@ while len(poss_empty_cords_lol) > 0 and loops < loops_limit:
         
         undos = 0
         
-        while len(all_poss) == len(failed_guesses) and undos < 100:
+        while len(possible_values) == len(failed_guesses) and undos < 100:
 
             del guesses[most_recent_guess_index]
             
@@ -385,7 +397,7 @@ while len(poss_empty_cords_lol) > 0 and loops < loops_limit:
             
             undos = undos + 1
             
-        for poss in all_poss:
+        for poss in possible_values:
             if poss not in failed_guesses:
                 guess = poss
                 break
@@ -404,25 +416,25 @@ while len(poss_empty_cords_lol) > 0 and loops < loops_limit:
 #         print('')
         
         guess_cord = poss_empty_cords_lol[0]
-        all_poss = guess_cord[3]
-        guess = all_poss[0]
-        cord = guess_cord[0]
+        possible_values = guess_cord['possible_values']
+        guess = possible_values[0]
+        cord = guess_cord['cord']
         row, col = cord[0], cord[1]
         grid[row][col] = guess
         index = len(guesses)
         guesses.update({
             index: {
-                'cord'           : cord,
-                'all_poss'       : all_poss,
-                'guess'          : guess,
-                'failed_guesses' : []
+                'cord'            : cord,
+                'possible_values' : possible_values,
+                'guess'           : guess,
+                'failed_guesses'  : []
             }
         })
         
 #     show_guesses()
 #     show_grid(f'{guess} guessed at {cord}')
 
-    get_possibilities(mode)
+    poss_empty_cords_lol, one_poss_empty_cords_lol, zero_poss_empty_cords_lol = get_possibilities(mode)
     
     loops = loops + 1
     no_guesses = len(guesses)
