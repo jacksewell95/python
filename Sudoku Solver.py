@@ -297,6 +297,10 @@ def next_guess(event):
 
 # Bind keypress event to handle_keypress()
 # window.bind("<Key>", handle_keypress)
+
+print('Open and close the Sudoku grid dialog on the taskbar')
+print()
+
 window.bind("<Key>", next_guess)
 window.mainloop()
 
