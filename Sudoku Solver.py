@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import tkinter as tk
 
 def plot_series(x, y, xlen=10, ylen=6, xlabel="", ylabel="", grid=True, format="-", start=0, end=None):
+    # Plots a graph with a single x and y series
     plt.figure(figsize=(xlen,ylen))
     plt.plot(x[start:end], y[start:end], format)
     plt.xlabel(xlabel)
@@ -25,11 +26,16 @@ for row in range(0,9):
                                               'square_cord' : square_cord,
                                               'square' : square}})
 
+################################################################################
 print(cords)
-print(cords_dict)
+print()
 
-def get_distinct_cords_lists():
+for cord in cords_dict:
+    print(f"{cord} : {cords_dict[cord]}")
+################################################################################
 
+def get_neighbouring_cords():
+    # Gets the coordinates of cells that share the same row, col, or square with the target cell
     for n in range(0,9):
         row_cords = []
         col_cords = []
@@ -44,38 +50,47 @@ def get_distinct_cords_lists():
             if square == n:
                 square_cords.append(cord)
 
-        distinct_cords_lists = {
+        neighbouring_cords = {
             'row_cords'    : row_cords,
             'col_cords'    : col_cords,
             'square_cords' : square_cords,
         }
 
-    return distinct_cords_lists
+    return neighbouring_cords
 
-def get_lists(grid, row, col):
-
-    row_list = [num for num in grid[row] if num != 0]
-    col_list = [x[col] for x in grid if x[col] != 0]
+def get_neighbouring_values(grid, row, col):
+    # Gets values that are already present in that row, col, and square
+    row_values = [num for num in grid[row] if num != 0]
+    col_values = [x[col] for x in grid if x[col] != 0]
     trio = [row // 3, col // 3]
-    square_list = []
+    square_values = []
 
     for row in range(0,9):
         for col in range(0,9):
             other_cell_trio = [row // 3, col // 3]
             if other_cell_trio == trio:
                 if grid[row][col] != 0:
-                    square_list.append(grid[row][col])
+                    square_values.append(grid[row][col])
 
-    return row_list, col_list, square_list
+    neighbouring_values = {
+        'row_values'    : row_values,
+        'col_values'    : col_values,
+        'square_values' : square_values,
+    }
+
+    return neighbouring_values
 
 def find_values(cell_row, cell_col, skip_values=[]):
 
-    row_list, col_list, square_list = get_lists(grid, cell_row, cell_col)
+    neighbouring_values = get_neighbouring_values(grid, cell_row, cell_col)
+    row_values = neighbouring_values['row_values']
+    col_values = neighbouring_values['col_values']
+    square_values = neighbouring_values['square_values']
 
     possible_values = []
 
     for value in range(1,10):
-        if value not in row_list and value not in col_list and value not in square_list and value not in skip_values:
+        if value not in row_values and value not in col_values and value not in square_values and value not in skip_values:
             possible_values.append(value)
 
     return possible_values
@@ -143,9 +158,10 @@ def assess_dupe_error():
 
     for cord in cords:
         row, col = cord[0], cord[1]
-        row_list, col_list, square_list = get_lists(grid, row, col)
-        for list in [row_list, col_list, square_list]:
-            if len(list) != len(set(list)):
+        neighbouring_values = get_neighbouring_values(grid, row, col)
+        for neighbour_type in neighbouring_values:
+            neighbour_list = neighbouring_values[neighbour_type]
+            if len(neighbour_list) != len(set(neighbour_list)):
                 dupe_error = True
 
     return dupe_error
@@ -154,13 +170,13 @@ def assess_homeless_error():
 
     homeless_error = False
 
-    # use get_distinct_cords_lists() to get current values and remaining possibilities for each row, col, and square list
+    # use get_neighbouring_cords() to get current values and remaining possibilities for each row, col, and square list
     # if any number 1-9 is missing from those values and possibilities then flag homeless_error
 
-    distinct_cords_lists = get_distinct_cords_lists()
+    neighbouring_cords = get_neighbouring_cords()
 
-    for cords_list_name in distinct_cords_lists:
-        cords_list = distinct_cords_lists[cords_list_name]
+    for neighbour_type in neighbouring_cords:
+        cords_list = neighbouring_cords[neighbour_type]
         list_current_and_poss_values = []
         for cord in cords_list:
             row, col = cord[0], cord[1]
@@ -321,7 +337,7 @@ while len(poss_empty_cords) > 0 and loops < loops_limit:
 
             del guesses[most_recent_guess_index]
 
-            get_most_recent_guess()
+            most_recent_guess_index, most_recent_guess, cord, last_guess, possible_values, failed_guesses = get_most_recent_guess()
 
             failed_guesses.append(last_guess)
 
