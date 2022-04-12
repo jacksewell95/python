@@ -9,7 +9,7 @@ def plot_series(x, y, xlen=10, ylen=6, xlabel="", ylabel="", grid=True, format="
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.grid(grid)
-    
+
 cords = []
 cords_dict = {}
 
@@ -26,16 +26,14 @@ for row in range(0,9):
                                               'square' : square}})
 
 # cords = list(cords_dict.keys())
-        
+
 print(cords)
 print(cords_dict)
 
 def get_distinct_cords_lists():
-    
-    global distinct_cords_lists
-    
+
     distinct_cords_lists = []
-    
+
     for n in range(0,9):
         row_cords = []
         col_cords = []
@@ -56,47 +54,45 @@ def get_distinct_cords_lists():
 #         print(f'   col {n}: {col_cords}')
 #         print(f'square {n}: {square_cords}')
 #         print('')
-        
+
 #     print(f'{len(distinct_cords_lists)} distinct lists')
 #     print('')
-        
+
 #     for list in distinct_cords_lists:
 #         print(list)
-        
+
     return distinct_cords_lists
 
 def get_lists(grid, row, col):
-    
+
     row_list = [num for num in grid[row] if num != 0]
     col_list = [x[col] for x in grid if x[col] != 0]
     trio = [row // 3, col // 3]
     square_list = []
-    
+
     for row in range(0,9):
         for col in range(0,9):
             other_cell_trio = [row // 3, col // 3]
             if other_cell_trio == trio:
                 if grid[row][col] != 0:
                     square_list.append(grid[row][col])
-                
+
     return row_list, col_list, square_list
 
 def find_values(cell_row, cell_col, skip_values=[]):
-    
-    global possible_values
-    
+
     row_list, col_list, square_list = get_lists(grid, cell_row, cell_col)
-    
+
     possible_values = []
-    
+
     for value in range(1,10):
         if value not in row_list and value not in col_list and value not in square_list and value not in skip_values:
             possible_values.append(value)
-    
+
     return possible_values
 
 def show_grid(message=''):
-    
+
     print(message)
     print()
     for r in grid:
@@ -104,80 +100,76 @@ def show_grid(message=''):
 #         print(f"{r[0]} | {r[1]} | {r[2]} | {r[3]} | {r[4]} | {r[5]} | {r[6]} | {r[7]} | {r[8]}")
 #         print('-'*33)
     print()
-    
+
 def show_guesses():
     for guess in guesses:
         print(f'{guess} : {guesses[guess]}')
     print('')
-    
+
 def get_possibilities(mode):
 
-    poss_empty_cords_lol = []
-    
+    poss_empty_cords = []
+
     for cord in cords:
         row, col = cord[0], cord[1]
         if grid[row][col] == 0:
-            find_values(row, col)
-            
-            poss_empty_cords_lol.append({
-                'cord'            : cord, 
-                'row'             : row, 
-                'col'             : col, 
-                'possible_values' : possible_values, 
+            possible_values = find_values(row, col)
+
+            poss_empty_cords.append({
+                'cord'            : cord,
+                'row'             : row,
+                'col'             : col,
+                'possible_values' : possible_values,
                 'possibilities'   : len(possible_values)
             })
-    
-    if len(poss_empty_cords_lol) > 0:
-        poss_empty_cords_df = pd.DataFrame(poss_empty_cords_lol)
+
+    if len(poss_empty_cords) > 0:
+        poss_empty_cords_df = pd.DataFrame(poss_empty_cords)
     else:
         poss_empty_cords_df = pd.DataFrame([{
-                'cord'            : None, 
-                'row'             : None, 
-                'col'             : None, 
-                'possible_values' : None, 
+                'cord'            : None,
+                'row'             : None,
+                'col'             : None,
+                'possible_values' : None,
                 'possibilities'   : None
             }])
-    
+
     if mode == 'quick':
         sort_by = ['possibilities','row','col']
     elif mode == 'relentless':
         sort_by = ['row','col']
-    
-    print(poss_empty_cords_df.columns.tolist())
-    
+
     poss_empty_cords_df.sort_values(by=sort_by, axis=0, ascending=True, inplace=True)
-    
     poss_empty_cords_df.reset_index(drop=True, inplace=True)
-    
-    one_poss_empty_cords_lol = poss_empty_cords_df[poss_empty_cords_df['possibilities'] == 1].values.tolist()
-    zero_poss_empty_cords_lol = poss_empty_cords_df[poss_empty_cords_df['possibilities'] == 0].values.tolist()
-    
-    return poss_empty_cords_lol, one_poss_empty_cords_lol, zero_poss_empty_cords_lol
+
+    zero_poss_empty_cords = poss_empty_cords_df[poss_empty_cords_df['possibilities'] == 0].values.tolist()
+
+    return poss_empty_cords, zero_poss_empty_cords
 
 def assess_dupe_error():
-    
+
     dupe_error = False
-    
+
     lists = []
-    
+
     for cord in cords:
         row, col = cord[0], cord[1]
         row_list, col_list, square_list = get_lists(grid, row, col)
         for list in [row_list, col_list, square_list]:
             if len(list) != len(set(list)):
                 dupe_error = True
-                
+
     return dupe_error
 
 def assess_homeless_error():
-    
+
     homeless_error = False
-    
-    # use get_distinct_cords_lists() to get current values and remaining possibilities for each row, col, and square list 
+
+    # use get_distinct_cords_lists() to get current values and remaining possibilities for each row, col, and square list
     # if any number 1-9 is missing from those values and possibilities then flag homeless_error
-        
-    get_distinct_cords_lists()
-    
+
+    distinct_cords_lists = get_distinct_cords_lists()
+
     for cords_list in distinct_cords_lists:
         list_current_and_poss_values = []
         for cord in cords_list:
@@ -186,43 +178,43 @@ def assess_homeless_error():
             if value != 0:
                 list_current_and_poss_values.append(value)
             else:
-                find_values(row, col)
+                possible_values = find_values(row, col)
                 for poss_value in possible_values:
                     if poss_value not in list_current_and_poss_values:
                         list_current_and_poss_values.append(poss_value)
-        
+
         list_current_and_poss_values = sorted(list_current_and_poss_values)
         ideal_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         if list_current_and_poss_values != ideal_list:
             homeless_error = True
             break
-        
+
 #         print(f'cords_list: {cords_list}')
 #         print(f'list_current_and_poss_values: {list_current_and_poss_values}')
 #         print('')
-        
+
     return homeless_error
 
-def get_most_recent_guess():  
-    
+def get_most_recent_guess():
+
     guess_list = []
-    
+
     for guess in guesses:
 #         print(f'{guess} : {guesses[guess]}')
         guess_list.append(guess)
-    
+
     if len(guesses) > 1:
         most_recent_guess_index = max(guess_list)
     else:
         most_recent_guess_index = 0
-        
+
     most_recent_guess = guesses[most_recent_guess_index]
-            
+
     cord = most_recent_guess['cord']
     last_guess = most_recent_guess['guess']
     possible_values = most_recent_guess['possible_values']
     failed_guesses = most_recent_guess['failed_guesses']
-        
+
     return most_recent_guess_index, most_recent_guess, cord, last_guess, possible_values, failed_guesses
 
 grids = {
@@ -256,7 +248,7 @@ grids = {
                [0,0,0,0,0,0,0,0,0],
                [0,0,0,0,0,0,0,0,0],
                [0,0,0,0,0,0,0,0,0]]
-    
+
 }
 
 grid = grids['easy']
@@ -280,17 +272,17 @@ for cord in cords:
         print_value = ""
 #     label1 = tk.Label(master=frame, text=print_value, fg="white", bg="black")
 #     label1.place(x=x, y=y)
-    
+
     frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=1, bg="black")
     frame.grid(row=y, column=x)
     label = tk.Label(master=frame, text=print_value, width=4, height=2)
     label.pack()
-    
+
 #     if cord == [1,1]:
 #         frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=5, bg="black")
 #         frame.grid(row=y, column=x)
 #         label = tk.Label(master=frame, text=print_value, width=12, height=6)
-#         label.pack()  
+#         label.pack()
 
 # content = [row for row in grid]
 # greeting = tk.Label(text=content,
@@ -303,7 +295,7 @@ for cord in cords:
 def handle_keypress(event):
     """Print the character associated to the key pressed"""
     print(event.char)
-    
+
 def next_guess(event):
     print("The next guess is...")
 
@@ -334,23 +326,23 @@ for row in grid:
 mode = 'quick'
 # mode = 'relentless'
 
-poss_empty_cords_lol, one_poss_empty_cords_lol, zero_poss_empty_cords_lol = get_possibilities(mode)
+poss_empty_cords, zero_poss_empty_cords = get_possibilities(mode)
 
 guesses = {}
 loops = 0
 loops_limit = 1000000
 
-while len(poss_empty_cords_lol) > 0 and loops < loops_limit:
+while len(poss_empty_cords) > 0 and loops < loops_limit:
 #     print('')
 #     print('New loop! ##########################################################################')
 #     print('')
-    
+
     dupe_error = assess_dupe_error()
     homeless_error = assess_homeless_error()
     # 1. Undo incorrect previous guess
-    
-    if len(zero_poss_empty_cords_lol) > 0 or dupe_error or homeless_error:
-        
+
+    if len(zero_poss_empty_cords) > 0 or dupe_error or homeless_error:
+
         #######################################################################################################
 #         if dupe_error:
 #             print('A row/column/square has a repeated value!')
@@ -358,64 +350,64 @@ while len(poss_empty_cords_lol) > 0 and loops < loops_limit:
 #             print('A row/column/square is missing some values/possibilities!')
 #         else:
 #             print('Some cells have no possibilities!')
-        
+
 #         print(f'{len(guesses)} guesses have been made so far')
 #         print('')
         #######################################################################################################
-        
+
         most_recent_guess_index, most_recent_guess, cord, last_guess, possible_values, failed_guesses = get_most_recent_guess()
-        
+
         failed_guesses.append(last_guess)
-        
+
 #         print(f'most recent guess failed:   {most_recent_guess_index} : {most_recent_guess}')
 #         print('')
-                
+
         row, col = cord[0], cord[1]
         grid[row][col] = 0
 
 #         print(f'{cord} reset to 0')
 #         print('')
-        
+
         undos = 0
-        
+
         while len(possible_values) == len(failed_guesses) and undos < 100:
 
             del guesses[most_recent_guess_index]
-            
+
             get_most_recent_guess()
 
             failed_guesses.append(last_guess)
 
 #             print(f'most recent guess failed:   {most_recent_guess_index} : {most_recent_guess}')
 #             print('')
-                
+
             row, col = cord[0], cord[1]
             grid[row][col] = 0
-                
+
 #             print(f'{cord} reset to 0')
 #             print('')
-            
+
             undos = undos + 1
-            
+
         for poss in possible_values:
             if poss not in failed_guesses:
                 guess = poss
                 break
-                
+
         row, col = cord[0], cord[1]
         grid[row][col] = guess
         most_recent_guess['guess'] = guess
-        
+
 #         print(f'new guess at last position:   {most_recent_guess_index} : {most_recent_guess}')
 #         print('')
-    
+
     # 2. Make a guess at the first cell with the least possibilities
-    
+
     else:
-#         print(f'cord to guess: {poss_empty_cords_lol[0]}')
+#         print(f'cord to guess: {poss_empty_cords[0]}')
 #         print('')
-        
-        guess_cord = poss_empty_cords_lol[0]
+
+        guess_cord = poss_empty_cords[0]
         possible_values = guess_cord['possible_values']
         guess = possible_values[0]
         cord = guess_cord['cord']
@@ -430,24 +422,24 @@ while len(poss_empty_cords_lol) > 0 and loops < loops_limit:
                 'failed_guesses'  : []
             }
         })
-        
+
 #     show_guesses()
 #     show_grid(f'{guess} guessed at {cord}')
 
-    poss_empty_cords_lol, one_poss_empty_cords_lol, zero_poss_empty_cords_lol = get_possibilities(mode)
-    
+    poss_empty_cords, zero_poss_empty_cords = get_possibilities(mode)
+
     loops = loops + 1
     no_guesses = len(guesses)
-    
+
     if loops % 10000 == 0:
         print(f'Loop {loops} has {no_guesses} guesses')
-    
+
     loops_and_guesses.append({
         'Loop'               : loops,
         'Filled Cells'       : no_guesses,
         'Total Filled Cells' : no_guesses + already_filled,
     })
-    
+
 print(f'Completed {no_guesses} guesses in {loops} loops :)')
 print('')
 show_grid('end')
@@ -465,6 +457,6 @@ x = loops_and_guesses_df[x_name]
 for y_name in ['Filled Cells','Total Filled Cells']:
     y = loops_and_guesses_df[y_name]
     plot_series(x, y, 18, 6, x_name, y_name, grid=True)
-    
+
 for guess in guesses:
     print(f'{guess} : {guesses[guess]}')
