@@ -25,8 +25,6 @@ for row in range(0,9):
                                               'square_cord' : square_cord,
                                               'square' : square}})
 
-# cords = list(cords_dict.keys())
-
 print(cords)
 print(cords_dict)
 
@@ -50,16 +48,6 @@ def get_distinct_cords_lists():
         distinct_cords_lists.append(row_cords)
         distinct_cords_lists.append(col_cords)
         distinct_cords_lists.append(square_cords)
-#         print(f'   row {n}: {row_cords}')
-#         print(f'   col {n}: {col_cords}')
-#         print(f'square {n}: {square_cords}')
-#         print('')
-
-#     print(f'{len(distinct_cords_lists)} distinct lists')
-#     print('')
-
-#     for list in distinct_cords_lists:
-#         print(list)
 
     return distinct_cords_lists
 
@@ -189,10 +177,6 @@ def assess_homeless_error():
             homeless_error = True
             break
 
-#         print(f'cords_list: {cords_list}')
-#         print(f'list_current_and_poss_values: {list_current_and_poss_values}')
-#         print('')
-
     return homeless_error
 
 def get_most_recent_guess():
@@ -200,7 +184,6 @@ def get_most_recent_guess():
     guess_list = []
 
     for guess in guesses:
-#         print(f'{guess} : {guesses[guess]}')
         guess_list.append(guess)
 
     if len(guesses) > 1:
@@ -259,9 +242,6 @@ show_grid(f'start')
 
 window = tk.Tk()
 
-# frame = tk.Frame(master=window, width=450, height=400, bg="black")
-# frame.pack()
-
 for cord in cords:
     row, col = cord[0], cord[1]
     x, y = (col + 1) * 35, (row + 1) * 35
@@ -270,27 +250,11 @@ for cord in cords:
         print_value = value
     else:
         print_value = ""
-#     label1 = tk.Label(master=frame, text=print_value, fg="white", bg="black")
-#     label1.place(x=x, y=y)
 
     frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=1, bg="black")
     frame.grid(row=y, column=x)
     label = tk.Label(master=frame, text=print_value, width=4, height=2)
     label.pack()
-
-#     if cord == [1,1]:
-#         frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=5, bg="black")
-#         frame.grid(row=y, column=x)
-#         label = tk.Label(master=frame, text=print_value, width=12, height=6)
-#         label.pack()
-
-# content = [row for row in grid]
-# greeting = tk.Label(text=content,
-#                     fg="white",
-#                     bg="black",
-#                     width=50,
-#                     height=20)
-# greeting.pack()
 
 def handle_keypress(event):
     """Print the character associated to the key pressed"""
@@ -299,12 +263,11 @@ def handle_keypress(event):
 def next_guess(event):
     print("The next guess is...")
 
-# Bind keypress event to handle_keypress()
-# window.bind("<Key>", handle_keypress)
-
 print('Open and close the Sudoku grid dialog on the taskbar')
 print()
 
+# Bind keypress event to handle_keypress()
+# window.bind("<Key>", handle_keypress)
 window.bind("<Key>", next_guess)
 window.mainloop()
 
@@ -343,30 +306,12 @@ while len(poss_empty_cords) > 0 and loops < loops_limit:
 
     if len(zero_poss_empty_cords) > 0 or dupe_error or homeless_error:
 
-        #######################################################################################################
-#         if dupe_error:
-#             print('A row/column/square has a repeated value!')
-#         elif homeless_error:
-#             print('A row/column/square is missing some values/possibilities!')
-#         else:
-#             print('Some cells have no possibilities!')
-
-#         print(f'{len(guesses)} guesses have been made so far')
-#         print('')
-        #######################################################################################################
-
         most_recent_guess_index, most_recent_guess, cord, last_guess, possible_values, failed_guesses = get_most_recent_guess()
 
         failed_guesses.append(last_guess)
 
-#         print(f'most recent guess failed:   {most_recent_guess_index} : {most_recent_guess}')
-#         print('')
-
         row, col = cord[0], cord[1]
         grid[row][col] = 0
-
-#         print(f'{cord} reset to 0')
-#         print('')
 
         undos = 0
 
@@ -378,14 +323,8 @@ while len(poss_empty_cords) > 0 and loops < loops_limit:
 
             failed_guesses.append(last_guess)
 
-#             print(f'most recent guess failed:   {most_recent_guess_index} : {most_recent_guess}')
-#             print('')
-
             row, col = cord[0], cord[1]
             grid[row][col] = 0
-
-#             print(f'{cord} reset to 0')
-#             print('')
 
             undos = undos + 1
 
@@ -398,14 +337,9 @@ while len(poss_empty_cords) > 0 and loops < loops_limit:
         grid[row][col] = guess
         most_recent_guess['guess'] = guess
 
-#         print(f'new guess at last position:   {most_recent_guess_index} : {most_recent_guess}')
-#         print('')
-
     # 2. Make a guess at the first cell with the least possibilities
 
     else:
-#         print(f'cord to guess: {poss_empty_cords[0]}')
-#         print('')
 
         guess_cord = poss_empty_cords[0]
         possible_values = guess_cord['possible_values']
@@ -422,9 +356,6 @@ while len(poss_empty_cords) > 0 and loops < loops_limit:
                 'failed_guesses'  : []
             }
         })
-
-#     show_guesses()
-#     show_grid(f'{guess} guessed at {cord}')
 
     poss_empty_cords, zero_poss_empty_cords = get_possibilities(mode)
 
