@@ -30,8 +30,6 @@ print(cords_dict)
 
 def get_distinct_cords_lists():
 
-    distinct_cords_lists = []
-
     for n in range(0,9):
         row_cords = []
         col_cords = []
@@ -45,9 +43,12 @@ def get_distinct_cords_lists():
                 col_cords.append(cord)
             if square == n:
                 square_cords.append(cord)
-        distinct_cords_lists.append(row_cords)
-        distinct_cords_lists.append(col_cords)
-        distinct_cords_lists.append(square_cords)
+
+        distinct_cords_lists = {
+            'row_cords'    : row_cords,
+            'col_cords'    : col_cords,
+            'square_cords' : square_cords,
+        }
 
     return distinct_cords_lists
 
@@ -158,7 +159,8 @@ def assess_homeless_error():
 
     distinct_cords_lists = get_distinct_cords_lists()
 
-    for cords_list in distinct_cords_lists:
+    for cords_list_name in distinct_cords_lists:
+        cords_list = distinct_cords_lists[cords_list_name]
         list_current_and_poss_values = []
         for cord in cords_list:
             row, col = cord[0], cord[1]
