@@ -80,9 +80,8 @@ def get_neighbouring_values(grid, row, col):
 
     return neighbouring_values
 
-def find_values(cell_row, cell_col, skip_values=[]):
-
-    neighbouring_values = get_neighbouring_values(grid, cell_row, cell_col)
+def find_values(neighbouring_values, skip_values=[]):
+    # Get the possible values for a particular cell based on existing neighbouring_values
     row_values = neighbouring_values['row_values']
     col_values = neighbouring_values['col_values']
     square_values = neighbouring_values['square_values']
@@ -95,8 +94,8 @@ def find_values(cell_row, cell_col, skip_values=[]):
 
     return possible_values
 
-def show_grid(message=''):
-
+def show_grid(grid, message=''):
+    # Display the grid by printing rows of grid lol to console
     print(message)
     print()
     for r in grid:
@@ -111,13 +110,14 @@ def show_guesses():
     print('')
 
 def get_possibilities(mode):
-
+    # Get the possible values for each empty coordinate in the grid
     poss_empty_cords = []
 
     for cord in cords:
         row, col = cord[0], cord[1]
         if grid[row][col] == 0:
-            possible_values = find_values(row, col)
+            neighbouring_values = get_neighbouring_values(grid, row, col)
+            possible_values = find_values(neighbouring_values)
 
             poss_empty_cords.append({
                 'cord'            : cord,
@@ -151,7 +151,7 @@ def get_possibilities(mode):
     return poss_empty_cords, zero_poss_empty_cords
 
 def assess_dupe_error():
-
+    # Check whether any coordinate has duplicates in its neighbouring values
     dupe_error = False
 
     lists = []
@@ -167,7 +167,7 @@ def assess_dupe_error():
     return dupe_error
 
 def assess_homeless_error():
-
+    # Check whether the existing and possible values in each row/col/square include all 1-9
     homeless_error = False
 
     # use get_neighbouring_cords() to get current values and remaining possibilities for each row, col, and square list
@@ -184,7 +184,8 @@ def assess_homeless_error():
             if value != 0:
                 list_current_and_poss_values.append(value)
             else:
-                possible_values = find_values(row, col)
+                neighbouring_values = get_neighbouring_values(grid, row, col)
+                possible_values = find_values(neighbouring_values)
                 for poss_value in possible_values:
                     if poss_value not in list_current_and_poss_values:
                         list_current_and_poss_values.append(poss_value)
@@ -197,8 +198,8 @@ def assess_homeless_error():
 
     return homeless_error
 
-def get_most_recent_guess():
-
+def get_most_recent_guess(guesses):
+    # Return info on the last guess that was made
     guess_list = []
 
     for guess in guesses:
@@ -217,6 +218,158 @@ def get_most_recent_guess():
     failed_guesses = most_recent_guess['failed_guesses']
 
     return most_recent_guess_index, most_recent_guess, cord, last_guess, possible_values, failed_guesses
+
+###################################################################################
+
+def fake_solve_sudoku(event):
+    # Solves sudoku upon interaction with GUI
+    print(f"Solving Sudoku... {event.char}")
+    # Move all code to within this function to solve
+
+def make_grid_image(grid):
+
+    window = tk.Tk()
+
+    for cord in cords:
+        row, col = cord[0], cord[1]
+        x, y = (col + 1) * 35, (row + 1) * 35
+        value = grid[row][col]
+        if value != 0:
+            print_value = value
+        else:
+            print_value = ""
+
+        frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=1, bg="black")
+        frame.grid(row=y, column=x)
+        label = tk.Label(master=frame, text=print_value, width=4, height=2)
+        label.pack()
+
+    print('Please open and close the Sudoku grid dialog on the taskbar')
+    print()
+
+    # Bind keypress event to function that we want to run
+    window.bind("<Key>", fake_solve_sudoku)
+    window.mainloop()
+
+# while True:
+#     tk.update_idletasks()
+#     tk.update()
+
+def solve_sudoku(mode, grid, loops_limit):
+
+    show_grid(grid, f'start')
+    make_grid_image(grid)
+
+    loops = 0
+    guesses = {}
+    loops_and_guesses = []
+
+    already_filled = 0
+    for row in grid:
+        for x in row:
+            if x > 0:
+                already_filled = already_filled + 1
+
+    poss_empty_cords, zero_poss_empty_cords = get_possibilities(mode)
+
+    while len(poss_empty_cords) > 0 and loops < loops_limit:
+    #     print('')
+    #     print('New loop! ##########################################################################')
+    #     print('')
+
+        dupe_error = assess_dupe_error()
+        homeless_error = assess_homeless_error()
+        # 1. Undo incorrect previous guess
+
+        if len(zero_poss_empty_cords) > 0 or dupe_error or homeless_error:
+
+            most_recent_guess_index, most_recent_guess, cord, last_guess, possible_values, failed_guesses = get_most_recent_guess(guesses)
+
+            failed_guesses.append(last_guess)
+
+            row, col = cord[0], cord[1]
+            grid[row][col] = 0
+
+            undos = 0
+
+            while len(possible_values) == len(failed_guesses) and undos < 100:
+
+                del guesses[most_recent_guess_index]
+
+                most_recent_guess_index, most_recent_guess, cord, last_guess, possible_values, failed_guesses = get_most_recent_guess(guesses)
+
+                failed_guesses.append(last_guess)
+
+                row, col = cord[0], cord[1]
+                grid[row][col] = 0
+
+                undos = undos + 1
+
+            for poss in possible_values:
+                if poss not in failed_guesses:
+                    guess = poss
+                    break
+
+            row, col = cord[0], cord[1]
+            grid[row][col] = guess
+            most_recent_guess['guess'] = guess
+
+        # 2. Make a guess at the first cell with the least possibilities
+
+        else:
+
+            guess_cord = poss_empty_cords[0]
+            possible_values = guess_cord['possible_values']
+            guess = possible_values[0]
+            cord = guess_cord['cord']
+            row, col = cord[0], cord[1]
+            grid[row][col] = guess
+            index = len(guesses)
+            guesses.update({
+                index: {
+                    'cord'            : cord,
+                    'possible_values' : possible_values,
+                    'guess'           : guess,
+                    'failed_guesses'  : []
+                }
+            })
+
+        poss_empty_cords, zero_poss_empty_cords = get_possibilities(mode)
+
+        loops = loops + 1
+        no_guesses = len(guesses)
+
+        if loops % 10000 == 0:
+            print(f'Loop {loops} has {no_guesses} guesses')
+
+        loops_and_guesses.append({
+            'Loop'               : loops,
+            'Filled Cells'       : no_guesses,
+            'Total Filled Cells' : no_guesses + already_filled,
+        })
+
+    print(f'Completed {no_guesses} guesses in {loops} loops :)')
+    print('')
+    show_grid(grid, 'end')
+
+    # because of a bad guess made earlier, two neighbouring cells may share the same single possibility
+    # these will both then be eliminated until the mistake is apparent from a cell having no possibilities
+    # to prevent this, get_possibilities should be run after every elimination in the for loop, and break out if some have 0 poss
+    # this would allow the while loop to run again straight away, discover the 0 poss cells and undo last guess and following elims
+
+    loops_and_guesses_df = pd.DataFrame(loops_and_guesses)
+
+    x_name = 'Loop'
+    x = loops_and_guesses_df[x_name]
+
+    for y_name in ['Filled Cells','Total Filled Cells']:
+        y = loops_and_guesses_df[y_name]
+        plot_series(x, y, 18, 6, x_name, y_name, grid=True)
+
+    for guess in guesses:
+        print(f'{guess} : {guesses[guess]}')
+
+###################################################################################
 
 grids = {
 
@@ -252,160 +405,10 @@ grids = {
 
 }
 
-grid = grids['easy']
-
-show_grid(f'start')
-
-###################################################################################
-
-window = tk.Tk()
-
-for cord in cords:
-    row, col = cord[0], cord[1]
-    x, y = (col + 1) * 35, (row + 1) * 35
-    value = grid[row][col]
-    if value != 0:
-        print_value = value
-    else:
-        print_value = ""
-
-    frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=1, bg="black")
-    frame.grid(row=y, column=x)
-    label = tk.Label(master=frame, text=print_value, width=4, height=2)
-    label.pack()
-
-def handle_keypress(event):
-    """Print the character associated to the key pressed"""
-    print(event.char)
-
-def next_guess(event):
-    print("The next guess is...")
-
-print('Open and close the Sudoku grid dialog on the taskbar')
-print()
-
-# Bind keypress event to handle_keypress()
-# window.bind("<Key>", handle_keypress)
-window.bind("<Key>", next_guess)
-window.mainloop()
-
-# while True:
-#     tk.update_idletasks()
-#     tk.update()
-
-###################################################################################
-
-loops_and_guesses = []
-
-already_filled = 0
-
-for row in grid:
-    for x in row:
-        if x > 0:
-            already_filled = already_filled + 1
-
 mode = 'quick'
 # mode = 'relentless'
-
-poss_empty_cords, zero_poss_empty_cords = get_possibilities(mode)
-
-guesses = {}
-loops = 0
+grid = grids['easy']
+# grid = grids['hard']
 loops_limit = 1000000
 
-while len(poss_empty_cords) > 0 and loops < loops_limit:
-#     print('')
-#     print('New loop! ##########################################################################')
-#     print('')
-
-    dupe_error = assess_dupe_error()
-    homeless_error = assess_homeless_error()
-    # 1. Undo incorrect previous guess
-
-    if len(zero_poss_empty_cords) > 0 or dupe_error or homeless_error:
-
-        most_recent_guess_index, most_recent_guess, cord, last_guess, possible_values, failed_guesses = get_most_recent_guess()
-
-        failed_guesses.append(last_guess)
-
-        row, col = cord[0], cord[1]
-        grid[row][col] = 0
-
-        undos = 0
-
-        while len(possible_values) == len(failed_guesses) and undos < 100:
-
-            del guesses[most_recent_guess_index]
-
-            most_recent_guess_index, most_recent_guess, cord, last_guess, possible_values, failed_guesses = get_most_recent_guess()
-
-            failed_guesses.append(last_guess)
-
-            row, col = cord[0], cord[1]
-            grid[row][col] = 0
-
-            undos = undos + 1
-
-        for poss in possible_values:
-            if poss not in failed_guesses:
-                guess = poss
-                break
-
-        row, col = cord[0], cord[1]
-        grid[row][col] = guess
-        most_recent_guess['guess'] = guess
-
-    # 2. Make a guess at the first cell with the least possibilities
-
-    else:
-
-        guess_cord = poss_empty_cords[0]
-        possible_values = guess_cord['possible_values']
-        guess = possible_values[0]
-        cord = guess_cord['cord']
-        row, col = cord[0], cord[1]
-        grid[row][col] = guess
-        index = len(guesses)
-        guesses.update({
-            index: {
-                'cord'            : cord,
-                'possible_values' : possible_values,
-                'guess'           : guess,
-                'failed_guesses'  : []
-            }
-        })
-
-    poss_empty_cords, zero_poss_empty_cords = get_possibilities(mode)
-
-    loops = loops + 1
-    no_guesses = len(guesses)
-
-    if loops % 10000 == 0:
-        print(f'Loop {loops} has {no_guesses} guesses')
-
-    loops_and_guesses.append({
-        'Loop'               : loops,
-        'Filled Cells'       : no_guesses,
-        'Total Filled Cells' : no_guesses + already_filled,
-    })
-
-print(f'Completed {no_guesses} guesses in {loops} loops :)')
-print('')
-show_grid('end')
-
-# because of a bad guess made earlier, two neighbouring cells may share the same single possibility
-# these will both then be eliminated until the mistake is apparent from a cell having no possibilities
-# to prevent this, get_possibilities should be run after every elimination in the for loop, and break out if some have 0 poss
-# this would allow the while loop to run again straight away, discover the 0 poss cells and undo last guess and following elims
-
-loops_and_guesses_df = pd.DataFrame(loops_and_guesses)
-
-x_name = 'Loop'
-x = loops_and_guesses_df[x_name]
-
-for y_name in ['Filled Cells','Total Filled Cells']:
-    y = loops_and_guesses_df[y_name]
-    plot_series(x, y, 18, 6, x_name, y_name, grid=True)
-
-for guess in guesses:
-    print(f'{guess} : {guesses[guess]}')
+solve_sudoku(mode, grid, loops_limit)
