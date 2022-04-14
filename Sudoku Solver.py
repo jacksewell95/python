@@ -246,17 +246,19 @@ def make_grid_image(grid, window, point = 'bootstrap', updated_row = False, upda
             print_value = ""
             bg = "black"
 
-        if point == 'bootstrap' or (point == 'update' and row == updated_row and col == updated_col):
+        if point == 'bootstrap':
             frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=1, bg=bg)
             frame.grid(row=y, column=x)
             label = tk.Label(master=frame, text=print_value, width=4, height=2)
             label.pack()
-            # time.sleep(1)
-        # elif point == 'update' and row == updated_row and col == updated_col:
-        #     frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=1, bg="black")
-        #     frame.grid(row=y, column=x)
-        #     label = tk.Label(master=frame, text=print_value, width=4, height=2)
-        #     label["text"] = print_value
+        elif point == 'update' and row == updated_row and col == updated_col:
+            frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=1, bg=bg)
+            frame.grid(row=y, column=x)
+            label = tk.Label(master=frame, text=print_value, width=4, height=2)
+            label.pack()
+            # if point == 'update' and row == updated_row and col == updated_col:
+            #     time.sleep(1)
+                # label["text"] = print_value
 
 def fill_sudoku(event):
     # Solves sudoku upon interaction with GUI
