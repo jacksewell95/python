@@ -221,45 +221,12 @@ def get_most_recent_guess(guesses):
 
 ###################################################################################
 
-def fake_solve_sudoku(event):
+def fill_sudoku(event):
     # Solves sudoku upon interaction with GUI
-    print(f"Solving Sudoku... {event.char}")
+    if event is not None:
+        print(f"Solving Sudoku... {event.char}")
+
     # Move all code to within this function to solve
-
-def make_grid_image(grid):
-
-    window = tk.Tk()
-
-    for cord in cords:
-        row, col = cord[0], cord[1]
-        x, y = (col + 1) * 35, (row + 1) * 35
-        value = grid[row][col]
-        if value != 0:
-            print_value = value
-        else:
-            print_value = ""
-
-        frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=1, bg="black")
-        frame.grid(row=y, column=x)
-        label = tk.Label(master=frame, text=print_value, width=4, height=2)
-        label.pack()
-
-    print('Please open and close the Sudoku grid dialog on the taskbar')
-    print()
-
-    # Bind keypress event to function that we want to run
-    window.bind("<Key>", fake_solve_sudoku)
-    window.mainloop()
-
-# while True:
-#     tk.update_idletasks()
-#     tk.update()
-
-def solve_sudoku(mode, grid, loops_limit):
-
-    show_grid(grid, f'start')
-    make_grid_image(grid)
-
     loops = 0
     guesses = {}
     loops_and_guesses = []
@@ -368,6 +335,43 @@ def solve_sudoku(mode, grid, loops_limit):
 
     for guess in guesses:
         print(f'{guess} : {guesses[guess]}')
+
+
+def make_grid_image(grid):
+
+    window = tk.Tk()
+
+    for cord in cords:
+        row, col = cord[0], cord[1]
+        x, y = (col + 1) * 35, (row + 1) * 35
+        value = grid[row][col]
+        if value != 0:
+            print_value = value
+        else:
+            print_value = ""
+
+        frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=1, bg="black")
+        frame.grid(row=y, column=x)
+        label = tk.Label(master=frame, text=print_value, width=4, height=2)
+        label.pack()
+
+    print('Please open and close the Sudoku grid dialog on the taskbar')
+    print()
+
+    # Bind keypress event to function that we want to run
+    window.bind("<Key>", fill_sudoku)
+    window.mainloop()
+
+# while True:
+#     tk.update_idletasks()
+#     tk.update()
+
+def solve_sudoku(mode, grid, loops_limit):
+
+    show_grid(grid, f'start')
+    make_grid_image(grid)
+
+    fill_sudoku(None)
 
 ###################################################################################
 
