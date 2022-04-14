@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import tkinter as tk
+import time
 
 def plot_series(x, y, xlen=10, ylen=6, xlabel="", ylabel="", grid=True, format="-", start=0, end=None):
     # Plots a graph with a single x and y series
@@ -221,6 +222,42 @@ def get_most_recent_guess(guesses):
 
 ###################################################################################
 
+def make_grid_image(grid, window, point = 'bootstrap', updated_row = False, updated_col = False):
+
+    # for w in range(0,3):
+    #     for h in range(0,3):
+    #         w_start, h_start = (w + 1) * 35 * 3, (h + 1) * 35 * 3
+    #         wide_frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=5, bg="blue")
+    #         wide_frame.grid(row=h_start, column=w_start)
+
+    # wide_frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=10, bg="blue")
+    # wide_frame.grid(row=105, column=105)
+
+    # can't overlay one frame on top of another?
+
+    for cord in cords:
+        row, col = cord[0], cord[1]
+        x, y = (col + 1) * 35, (row + 1) * 35
+        value = grid[row][col]
+        if value != 0:
+            print_value = value
+            bg = "green"
+        else:
+            print_value = ""
+            bg = "black"
+
+        if point == 'bootstrap' or (point == 'update' and row == updated_row and col == updated_col):
+            frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=1, bg=bg)
+            frame.grid(row=y, column=x)
+            label = tk.Label(master=frame, text=print_value, width=4, height=2)
+            label.pack()
+            # time.sleep(1)
+        # elif point == 'update' and row == updated_row and col == updated_col:
+        #     frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=1, bg="black")
+        #     frame.grid(row=y, column=x)
+        #     label = tk.Label(master=frame, text=print_value, width=4, height=2)
+        #     label["text"] = print_value
+
 def fill_sudoku(event):
     # Solves sudoku upon interaction with GUI
     if event is not None:
@@ -314,6 +351,10 @@ def fill_sudoku(event):
             'Total Filled Cells' : no_guesses + already_filled,
         })
 
+        make_grid_image(grid, window, 'update', row, col)
+
+        # time.sleep(1)
+
     print(f'Completed {no_guesses} guesses in {loops} loops :)')
     print('')
     show_grid(grid, 'end')
@@ -335,23 +376,6 @@ def fill_sudoku(event):
     for guess in guesses:
         print(f'{guess} : {guesses[guess]}')
 
-
-def make_grid_image(grid, window):
-
-    for cord in cords:
-        row, col = cord[0], cord[1]
-        x, y = (col + 1) * 35, (row + 1) * 35
-        value = grid[row][col]
-        if value != 0:
-            print_value = value
-        else:
-            print_value = ""
-
-        frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=1, bg="black")
-        frame.grid(row=y, column=x)
-        label = tk.Label(master=frame, text=print_value, width=4, height=2)
-        label.pack()
-
 # while True:
 #     tk.update_idletasks()
 #     tk.update()
@@ -359,6 +383,8 @@ def make_grid_image(grid, window):
 def solve_sudoku(mode, grid, loops_limit):
 
     show_grid(grid, f'start')
+
+    global window
 
     window = tk.Tk()
     make_grid_image(grid, window)
