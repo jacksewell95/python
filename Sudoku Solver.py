@@ -225,7 +225,6 @@ def fill_sudoku(event):
     # Solves sudoku upon interaction with GUI
     if event is not None:
         print(f"Solving Sudoku... {event.char}")
-
     # Move all code to within this function to solve
     loops = 0
     guesses = {}
@@ -371,7 +370,7 @@ def solve_sudoku(mode, grid, loops_limit):
     show_grid(grid, f'start')
     make_grid_image(grid)
 
-    fill_sudoku(None)
+    # fill_sudoku(None)
 
 ###################################################################################
 
