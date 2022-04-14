@@ -336,9 +336,7 @@ def fill_sudoku(event):
         print(f'{guess} : {guesses[guess]}')
 
 
-def make_grid_image(grid):
-
-    window = tk.Tk()
+def make_grid_image(grid, window):
 
     for cord in cords:
         row, col = cord[0], cord[1]
@@ -354,13 +352,6 @@ def make_grid_image(grid):
         label = tk.Label(master=frame, text=print_value, width=4, height=2)
         label.pack()
 
-    print('Please open and close the Sudoku grid dialog on the taskbar')
-    print()
-
-    # Bind keypress event to function that we want to run
-    window.bind("<Key>", fill_sudoku)
-    window.mainloop()
-
 # while True:
 #     tk.update_idletasks()
 #     tk.update()
@@ -368,7 +359,16 @@ def make_grid_image(grid):
 def solve_sudoku(mode, grid, loops_limit):
 
     show_grid(grid, f'start')
-    make_grid_image(grid)
+
+    window = tk.Tk()
+    make_grid_image(grid, window)
+
+    print('Please open and close the Sudoku grid dialog on the taskbar')
+    print()
+
+    # Bind keypress event to function that we want to run
+    window.bind("<Key>", fill_sudoku)
+    window.mainloop()
 
     # fill_sudoku(None)
 
