@@ -180,11 +180,9 @@ def initialise_files():
         quizzes_idx = quizzes.set_index("quiz_title")
         quiz_titles = quizzes["quiz_title"].to_list()
 
-def add_accents(x1):
+def add_accents(word_input):
 
     global word_output
-
-    word_input = x1
 
     accents_dict = {'a1': 'ā', 'a2': 'á', 'a3': 'ǎ', 'a4': 'à', 'e1': 'ē', 'e2': 'é', 'e3': 'ě', 'e4': 'è',
                     'i1': 'ī', 'i2': 'í', 'i3': 'ǐ', 'i4': 'ì', 'o1': 'ō', 'o2': 'ó', 'o3': 'ǒ', 'o4': 'ò',
