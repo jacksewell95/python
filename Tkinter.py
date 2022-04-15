@@ -4,14 +4,23 @@ import tkinter.ttk as ttk
 # Create a new window using tk.Tk() and assign to 'window'
 window = tk.Tk()
 # Add a widget - use tk.Label() to add text
-# Width and height are measured in text units, so will naturally be taller than it is wide 
+# Width and height are measured in text units, so will naturally be taller than it is wide
 message = tk.Label(text="Python is cool! :D",
                    fg="#00ff00",
                    bg="black",
                    width=20,
-                   height=10)
+                   height=2)
 # Add the Label widget to the window using its .pack() method
 message.pack()
+
+button = tk.Button(text="Next",
+                   fg="black",
+                   bg="#00ff00",
+                   width=20,
+                   height=5)
+
+button.pack()
+
 # Tkinter sizes the window as small as it can
 # Tell Python to run the Tkinter event loop
 # This listens for events (button clicks / keypresses) and blocks any following code until the window is closed
