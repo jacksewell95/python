@@ -46,10 +46,6 @@ def initialise_files():
             },
         ])
 
-        # quizzes = pd.DataFrame([["Red Dwarf", "red dwarf", "red_dwarf_q_a", "red_dwarf_records"],
-        #                         ["Peep Show", "peep show", "peep_show_q_a", "peep_show_records"]],
-        #                 columns = ["quiz_title", "quiz_title_lower", "q_a_filepath", "records_filepath"])
-
         quizzes.to_csv(f"{filepath_prefix}quizzes.csv",index=False)
         print(f'''
         Initialised {filepath_prefix}quizzes.csv''')
