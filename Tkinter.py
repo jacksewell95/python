@@ -21,6 +21,7 @@ entry = tk.Entry(fg = "#00ff00",
 
 entry.pack()
 
+entry.insert(0, "Jack")
 name = entry.get()
 print(f"Name: {name}")
 
