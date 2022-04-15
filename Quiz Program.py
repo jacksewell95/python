@@ -201,9 +201,6 @@ def add_accents(word_input):
 
     if distinct_accents_added == 0:
         word_output = word_input
-#     else:
-#         print(f'''
-#         {word_output}''')
 
 def topic_selection(q_a_filepath, sentence, exemption):
 
@@ -282,12 +279,6 @@ def import_records(verb):
     ''').lower()
 
     while quiz_choice_lower not in list(quizzes["quiz_title_lower"]):
-
-#         print('''
-#         Sorry, that quiz is not available
-#         Enter a title from the list''')
-#         quiz_choice_lower = input(f'''
-#         ''').lower()
 
         quiz_choice_lower = input(f'''
         Sorry, that quiz is not available
@@ -479,15 +470,6 @@ def play_quiz(name_title):
                     last_result = "-"
 
                 if exists == 1:
-#                     my_correct_records = all_my_correct_records[all_my_correct_records["QID"] == QID]
-#                     my_correct_records_question = my_correct_records["QID"]
-#                     correct = 0 + len(my_correct_records_question)
-
-#                     my_incorrect_pass_records = all_my_incorrect_pass_records[all_my_incorrect_pass_records["QID"] == QID]
-#                     my_incorrect_pass_records_question = my_incorrect_pass_records["QID"]
-#                     incorrect_pass = 0 + len(my_incorrect_pass_records_question)
-
-#                     total_asked = incorrect_pass + correct
 
                     my_correct_records = all_my_last_10_correct_records[all_my_last_10_correct_records["QID"] == QID]
                     my_correct_records_question = my_correct_records["QID"]
@@ -1022,9 +1004,7 @@ def edit_quiz():
     else:
         pass
 
-def plot_records(x):
-
-    name_title = x
+def plot_records(name_title):
 
     import_records("view")
 
