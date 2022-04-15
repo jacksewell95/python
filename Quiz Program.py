@@ -837,11 +837,9 @@ def create_quiz(quizzes):
 
     add_question(new_q_a_filepath, "new", records_filepath)
 
-def edit_question(aa):
+def edit_question(q_a_filepath):
 
     global quiz_data
-
-    q_a_filepath = aa
 
     quiz_data = pd.read_csv(f"{q_a_filepath}")
     quiz_data = quiz_data.set_index("QID")
