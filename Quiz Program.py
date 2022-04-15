@@ -205,32 +205,32 @@ def topic_selection(q_a_filepath, sentence, exemption):
 
     topic_choice_input = input(f'''
     {sentence}
-    ''')
+    ''').lower()
 
     while True:
         try:
             topic_choice_input = int(topic_choice_input)
             try:
-                topic_choice = topic_num_dict[topic_choice_input]#.lower()
+                topic_choice = topic_num_dict[topic_choice_input]
             except:
                 topic_choice_input = input(f'''
                 Sorry I didn't understand that
                 {sentence}
-                ''')
+                ''').lower()
                 continue
             break
         except:
-            if topic_choice_input.lower() in topic_lower_dict:
-                topic_choice = topic_lower_dict[topic_choice_input.lower()]#.lower()
+            if topic_choice_input in topic_lower_dict:
+                topic_choice = topic_lower_dict[topic_choice_input]
                 break
-            elif topic_choice_input.lower() == exemption:
-                topic_choice = topic_choice_input.lower()
+            elif topic_choice_input == exemption:
+                topic_choice = topic_choice_input
                 break
             else:
                 topic_choice_input = input(f'''
                 Sorry I didn't understand that
                 {sentence}
-                ''')
+                ''').lower()
                 continue
 
     if exemption == "new" and topic_choice == "new":
