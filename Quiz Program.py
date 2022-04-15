@@ -894,10 +894,7 @@ def edit_question(q_a_filepath):
 
 def remove_question(q_a_filepath):
 
-    global quiz_data
-
-    quiz_data = pd.read_csv(f"{q_a_filepath}")
-    quiz_data = quiz_data.set_index("QID")
+    quiz_data = pd.read_csv(f"{q_a_filepath}").set_index("QID")
 
 #     display(HTML(quiz_data.to_html()))
 
@@ -907,12 +904,8 @@ def remove_question(q_a_filepath):
 
     while True:
         try:
-            #quiz_data = quiz_data.drop(quiz_data.index[int(index_to_remove)])
             quiz_data = quiz_data[quiz_data.index != int(index_to_remove)]
-
             quiz_data.to_csv(f"{q_a_filepath}",index=True)
-            quiz_data = pd.read_csv(f"{q_a_filepath}")
-            quiz_data = quiz_data.set_index("QID")
             display(HTML(quiz_data.to_html()))
             print(f'''
             {index_to_remove} removed''')
@@ -923,6 +916,8 @@ def remove_question(q_a_filepath):
             Which question would you like to remove? (Enter row no.)
             ''')
             continue
+
+    return quiz_data
 
 def edit_quiz():
 
@@ -951,7 +946,7 @@ def edit_quiz():
             {edit_menu_text}
             ''').lower()
         elif edit_menu in ["remove","r"]:
-            remove_question(q_a_filepath)
+            quiz_data = remove_question(q_a_filepath)
             edit_menu = input(f'''
             {edit_menu_text}
             ''').lower()
