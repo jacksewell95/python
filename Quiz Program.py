@@ -449,28 +449,34 @@ def play_quiz(x):
                 all_my_recent_correct_records = all_my_recent_records[all_my_recent_records["result"] == "correct"]
                 all_my_recent_incorrect_pass_records = all_my_recent_records[all_my_recent_records["result"].isin(["incorrect","pass"])]
 
-                all_my_last_10_records = []
-                all_my_last_1_record = []
+                all_my_last_10_records_dfs = []
+                all_my_last_1_record_dfs = []
 
                 for QID in question_list:
                     my_last_10_records = my_records[my_records["QID"] == QID].tail(10)
-                    my_last_10_records = my_last_10_records.values.tolist()
-                    all_my_last_10_records = all_my_last_10_records + my_last_10_records
+                    # my_last_10_records = my_last_10_records.values.tolist()
+                    # all_my_last_10_records = all_my_last_10_records + my_last_10_records
+                    all_my_last_10_records_dfs.append(my_last_10_records)
 
                     my_last_1_record = my_records[my_records["QID"] == QID].tail(1)
-                    my_last_1_record = my_last_1_record.values.tolist()
-                    all_my_last_1_record = all_my_last_1_record + my_last_1_record
+                    # my_last_1_record = my_last_1_record.values.tolist()
+                    # all_my_last_1_record = all_my_last_1_record + my_last_1_record
+                    all_my_last_1_record_dfs.append(my_last_1_record)
 
-                all_my_last_10_records = pd.DataFrame(all_my_last_10_records, columns = ["answer_time", "name_title",
-                   "quiz_start_time", "subset_choice", "question_list_count", "quiz_length", "topic", "question_no",
-                   "QID", "question", "answer", "user_answer", "result"])
+                # all_my_last_10_records = pd.DataFrame(all_my_last_10_records, columns = ["answer_time", "name_title",
+                #    "quiz_start_time", "subset_choice", "question_list_count", "quiz_length", "topic", "question_no",
+                #    "QID", "question", "answer", "user_answer", "result"])
+
+                all_my_last_10_records = pd.concat(all_my_last_10_records_dfs)
 
                 all_my_last_10_correct_records = all_my_last_10_records[all_my_last_10_records["result"] == "correct"]
                 all_my_last_10_incorrect_pass_records = all_my_last_10_records[all_my_last_10_records["result"].isin(["incorrect","pass"])]
 
-                all_my_last_1_record = pd.DataFrame(all_my_last_1_record, columns = ["answer_time", "name_title",
-                   "quiz_start_time", "subset_choice", "question_list_count", "quiz_length", "topic", "question_no",
-                   "QID", "question", "answer", "user_answer", "result"])
+                # all_my_last_1_record = pd.DataFrame(all_my_last_1_record, columns = ["answer_time", "name_title",
+                #    "quiz_start_time", "subset_choice", "question_list_count", "quiz_length", "topic", "question_no",
+                #    "QID", "question", "answer", "user_answer", "result"])
+
+                all_my_last_1_record = pd.concat(all_my_last_1_record_dfs)
 
                 all_my_last_1_record = all_my_last_1_record.set_index("QID")
                 all_my_last_1_record_dict = all_my_last_1_record.to_dict()["result"]
