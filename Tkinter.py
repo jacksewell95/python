@@ -5,7 +5,7 @@ import tkinter.ttk as ttk
 window = tk.Tk()
 # Add a widget - use tk.Label() to add text
 # Width and height are measured in text units, so will naturally be taller than it is wide
-message = tk.Label(text = "Python is cool! :D",
+message = tk.Label(text = "Enter name:",
                    fg = "#00ff00",
                    bg = "black",
                    width = 40,
@@ -20,6 +20,9 @@ entry = tk.Entry(fg = "#00ff00",
                  width = 40)
 
 entry.pack()
+
+name = entry.get()
+print(f"Name: {name}")
 
 # Button can be configured to call function when clicked
 # Takes similar parameters to label
