@@ -5,20 +5,31 @@ import tkinter.ttk as ttk
 window = tk.Tk()
 # Add a widget - use tk.Label() to add text
 # Width and height are measured in text units, so will naturally be taller than it is wide
-message = tk.Label(text="Python is cool! :D",
-                   fg="#00ff00",
-                   bg="black",
-                   width=20,
-                   height=2)
+message = tk.Label(text = "Python is cool! :D",
+                   fg = "#00ff00",
+                   bg = "black",
+                   width = 40,
+                   height = 2)
 # Add the Label widget to the window using its .pack() method
 message.pack()
 
-button = tk.Button(text="Next",
-                   fg="black",
-                   bg="#00ff00",
-                   width=20,
-                   height=5)
+# Entry gives small text box that user can enter text into
+# Takes similar parameters to Label and Button (bot not height)
+entry = tk.Entry(fg = "#00ff00",
+                 bg = "black",
+                 width = 40)
 
+entry.pack()
+
+# Button can be configured to call function when clicked
+# Takes similar parameters to label
+button = tk.Button(text = "Next",
+                   fg="black",
+                   bg = "#00ff00",
+                   width = 40,
+                   height = 5)
+
+# Button needs packing to appear in window
 button.pack()
 
 # Tkinter sizes the window as small as it can
