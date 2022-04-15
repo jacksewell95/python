@@ -20,7 +20,7 @@ def initialise_files():
     global quizzes_idx
     global quiz_titles
 
-    filepath_prefix = "C:/Documents/Python Programs (xlsx)/"
+    filepath_prefix = "C:/Documents/Python Programs (csv)/"
 
     if not os.path.exists(f"{filepath_prefix}"):
         os.makedirs(f"{filepath_prefix}")
@@ -28,17 +28,17 @@ def initialise_files():
         Initialised {filepath_prefix}''')
 
     try:
-        quizzes = pd.read_excel(f"{filepath_prefix}quizzes.xlsx")
+        quizzes = pd.read_csv(f"{filepath_prefix}quizzes.csv")
     except:
         quizzes = pd.DataFrame([["Red Dwarf", "red dwarf", "red_dwarf_q_a", "red_dwarf_records"],
                                 ["Peep Show", "peep show", "peep_show_q_a", "peep_show_records"]],
                         columns = ["quiz_title", "quiz_title_lower", "q_a_filepath", "records_filepath"])
-        quizzes.to_excel(f"{filepath_prefix}quizzes.xlsx",index=False)
+        quizzes.to_csv(f"{filepath_prefix}quizzes.csv",index=False)
         print(f'''
-        Initialised {filepath_prefix}quizzes.xlsx''')
+        Initialised {filepath_prefix}quizzes.csv''')
 
     try:
-        pd.read_excel(f"{filepath_prefix}red_dwarf_q_a.xlsx")
+        pd.read_csv(f"{filepath_prefix}red_dwarf_q_a.csv")
     except:
         red_dwarf_q_a = pd.DataFrame(
         [[1, 'In which episode does the crew originally get wiped out?', 'The End', 'Series I'],
@@ -113,12 +113,12 @@ def initialise_files():
          [70, 'In which episode does Rimmer search for a better universe?', 'Skipper', 'Series XII']],
                 columns = ["QID", "Question", "Answer", "Topic"])
         red_dwarf_q_a.set_index("QID")
-        red_dwarf_q_a.to_excel(f"{filepath_prefix}red_dwarf_q_a.xlsx",index=True)
+        red_dwarf_q_a.to_csv(f"{filepath_prefix}red_dwarf_q_a.csv",index=True)
         print(f'''
-        Initialised {filepath_prefix}red_dwarf_q_a.xlsx''')
+        Initialised {filepath_prefix}red_dwarf_q_a.csv''')
 
     try:
-        pd.read_excel(f"{filepath_prefix}peep_show_q_a.xlsx")
+        pd.read_csv(f"{filepath_prefix}peep_show_q_a.csv")
     except:
         peep_show_q_a = pd.DataFrame(
         [[1, 'In which episode does Mark get bullied by children?', 'Warring Factions', 'Series 1'],
@@ -159,9 +159,9 @@ def initialise_files():
          [36, 'In which episode does Sophie go into labour?', 'Das Boot', 'Series 6']],
                 columns = ["QID", "Question", "Answer", "Topic"])
         peep_show_q_a.set_index("QID")
-        peep_show_q_a.to_excel(f"{filepath_prefix}peep_show_q_a.xlsx",index=True)
+        peep_show_q_a.to_csv(f"{filepath_prefix}peep_show_q_a.csv",index=True)
         print(f'''
-        Initialised {filepath_prefix}peep_show_q_a.xlsx''')
+        Initialised {filepath_prefix}peep_show_q_a.csv''')
 
         quizzes_idx = quizzes.set_index("quiz_title")
         quiz_titles = quizzes["quiz_title"].to_list()
@@ -203,7 +203,7 @@ def topic_selection(aa, jj, mm):
 
     exemption = mm
 
-    quiz_data = pd.read_excel(f"{q_a_filepath}")
+    quiz_data = pd.read_csv(f"{q_a_filepath}")
     topic_list = list(quiz_data["Topic"])
 
     topic_list = [str(i) for i in topic_list]
@@ -264,7 +264,7 @@ def import_records(z):
     global quiz_titles
     global quiz_choice_lower
 
-    quizzes = pd.read_excel(f"{filepath_prefix}quizzes.xlsx")
+    quizzes = pd.read_csv(f"{filepath_prefix}quizzes.csv")
     quizzes_idx = quizzes.set_index("quiz_title")
     quiz_titles = quizzes["quiz_title"].to_list()
 
@@ -301,13 +301,13 @@ def import_records(z):
     quizzes_records_dict = quizzes_cut_lower_idx.to_dict()["records_filepath"]
 
     q_a_filepath_suffix = quizzes_q_a_dict[quiz_choice_lower]
-    q_a_filepath = f"{filepath_prefix}{q_a_filepath_suffix}.xlsx"
+    q_a_filepath = f"{filepath_prefix}{q_a_filepath_suffix}.csv"
     records_filepath_suffix = quizzes_records_dict[quiz_choice_lower]
-    records_filepath = f"{filepath_prefix}{records_filepath_suffix}.xlsx"
+    records_filepath = f"{filepath_prefix}{records_filepath_suffix}.csv"
     #print(records_filepath)
 
     try:
-        records = pd.read_excel(f"{records_filepath}")
+        records = pd.read_csv(f"{records_filepath}")
     except:
         if True:
             try:
@@ -317,7 +317,7 @@ def import_records(z):
                 pass
                 #print("no records exist yet, doing nothing")
     else:
-        records = pd.read_excel(f"{records_filepath}")
+        records = pd.read_csv(f"{records_filepath}")
         #print(records)
         #print("reading in old records")
 
@@ -342,10 +342,27 @@ def play_quiz(x):
 
             ##############################################################################################
 
-            quiz_data = pd.read_excel(f"{q_a_filepath}")
+            quiz_data = pd.read_csv(f"{q_a_filepath}")
             quiz_data_idx = quiz_data.set_index("QID")
 
-            records = pd.read_excel(f"{records_filepath}")
+            try:
+                records = pd.read_csv(f"{records_filepath}")
+            except:
+                records = pd.DataFrame([{
+                    'answer_time'         : None,
+                    'name_title'          : None,
+                    'quiz_start_time'     : None,
+                    'subset_choice'       : None,
+                    'question_list_count' : None,
+                    'quiz_length'         : None,
+                    'topic'               : None,
+                    'question_no'         : None,
+                    'QID'                 : None,
+                    'question'            : None,
+                    'answer'              : None,
+                    'user_answer'         : None,
+                    'result'              : None,
+                }])
 
             #########################################################################
             # Give topic choice -- cut data accordingly -- create dicts/list/variable
@@ -646,11 +663,39 @@ def play_quiz(x):
                     records = records.append(new_row_series, ignore_index=True)
                 else:
                     #print("overwriting old records")
-                    records = pd.DataFrame([[answer_time, name_title, quiz_start_time, topic_choice, question_list_count,
-                    quiz_length, topic, question_no, QID, question, answer, user_answer, result]],
-                    columns = ["answer_time", "name_title", "quiz_start_time", "subset_choice", "question_list_count",
-                    "quiz_length", "topic", "question_no", "QID", "question", "answer", "user_answer", "result"])
-                    records.to_excel(f"{records_filepath}",index=False)
+                    records = pd.DataFrame([[
+                        answer_time,
+                        name_title,
+                        quiz_start_time,
+                        topic_choice,
+                        question_list_count,
+                        quiz_length,
+                        topic,
+                        question_no,
+                        QID,
+                        question,
+                        answer,
+                        user_answer,
+                        result
+                    ]],
+
+                    columns = [
+                        "answer_time",
+                        "name_title",
+                        "quiz_start_time",
+                        "subset_choice",
+                        "question_list_count",
+                        "quiz_length",
+                        "topic",
+                        "question_no",
+                        "QID",
+                        "question",
+                        "answer",
+                        "user_answer",
+                        "result"
+                    ])
+
+                    records.to_csv(f"{records_filepath}",index=False)
 
                 if result in ["incorrect","pass"]:
                     incorrect_pass_row = [question_no, question, answer, result]
@@ -687,7 +732,7 @@ def play_quiz(x):
 
             play_loops = play_loops + 1
 
-            records.to_excel(f"{records_filepath}",index=False)
+            records.to_csv(f"{records_filepath}",index=False)
 
             play_again = input(f'''
             Would you like to play again? (Yes/No or Enter for yes)
@@ -701,7 +746,7 @@ def play_quiz(x):
             Would you like to play again?
             ''').lower()
     else:
-        records.to_excel(f"{records_filepath}",index=False)
+        records.to_csv(f"{records_filepath}",index=False)
 
 def add_question(aa, bb, ff):
 
@@ -715,7 +760,7 @@ def add_question(aa, bb, ff):
     records_filepath = ff
 
     if outer_function == "edit":
-        quiz_data = pd.read_excel(f"{q_a_filepath}")
+        quiz_data = pd.read_csv(f"{q_a_filepath}")
 #         print(quiz_data)
         quiz_data = quiz_data.set_index("QID")
 #         display(HTML(quiz_data.to_html()))
@@ -733,7 +778,7 @@ def add_question(aa, bb, ff):
                 new_QID = 1
             else:
                 try:
-                    records = pd.read_excel(f"{records_filepath}")
+                    records = pd.read_csv(f"{records_filepath}")
                     QID_list = quiz_data.index.to_list() + records["QID"].to_list
                 except:
                     QID_list = quiz_data.index.to_list()
@@ -756,7 +801,7 @@ def add_question(aa, bb, ff):
                 New Topic:
                 ''')
             else:
-                topic_selection(f"{filepath_prefix}{new_q_a_filepath}.xlsx", "Topic (select from list or enter new):", "new")
+                topic_selection(f"{filepath_prefix}{new_q_a_filepath}.csv", "Topic (select from list or enter new):", "new")
 
             add_accents(topic_choice)
             new_topic = word_output
@@ -771,7 +816,7 @@ def add_question(aa, bb, ff):
 #                 print(f'''made new row
 #                 {new_question_record}''')
 
-                quiz_data = pd.read_excel(f"{filepath_prefix}{new_q_a_filepath}.xlsx")
+                quiz_data = pd.read_csv(f"{filepath_prefix}{new_q_a_filepath}.csv")
 #                 print(f'''read quiz data
 #                 {quiz_data}''')
 
@@ -789,8 +834,8 @@ def add_question(aa, bb, ff):
 
             quiz_data = quiz_data.set_index("QID")
 #             print("indexed on QID")
-            quiz_data.to_excel(f"{filepath_prefix}{new_q_a_filepath}.xlsx",index=True)
-#             print("written to excel")
+            quiz_data.to_csv(f"{filepath_prefix}{new_q_a_filepath}.csv",index=True)
+#             print("written to csv")
 
             questions_so_far = questions_so_far + 1
             display(HTML(quiz_data.to_html()))
@@ -803,7 +848,7 @@ def add_question(aa, bb, ff):
             {add_question_menu}
             ''').lower()
     else:
-        quiz_data.to_excel(f"{filepath_prefix}{new_q_a_filepath}.xlsx",index=True)
+        quiz_data.to_csv(f"{filepath_prefix}{new_q_a_filepath}.csv",index=True)
 
 def create_quiz(y):
 
@@ -825,7 +870,7 @@ def create_quiz(y):
     new_quiz_row_series = pd.Series(new_quiz_row, index = quizzes.columns)
     quizzes = quizzes.append(new_quiz_row_series, ignore_index=True)
 
-    quizzes.to_excel(f"{filepath_prefix}quizzes.xlsx",index=False)
+    quizzes.to_csv(f"{filepath_prefix}quizzes.csv",index=False)
 
     #####################################################################################
     # Ask for first question -- initialise questions data -- loop through extra questions
@@ -841,7 +886,7 @@ def edit_question(aa):
 
     q_a_filepath = aa
 
-    quiz_data = pd.read_excel(f"{q_a_filepath}")
+    quiz_data = pd.read_csv(f"{q_a_filepath}")
     quiz_data = quiz_data.set_index("QID")
 
     edit_question_menu = "Which row would you like to edit? (Enter QID)"
@@ -927,7 +972,7 @@ def edit_question(aa):
 
 
 
-            quiz_data.to_excel(f"{q_a_filepath}",index=True)
+            quiz_data.to_csv(f"{q_a_filepath}",index=True)
 
             row_modifications_made = row_modifications_made + 1
 
@@ -954,7 +999,7 @@ def remove_question(aa):
 
     q_a_filepath = aa
 
-    quiz_data = pd.read_excel(f"{q_a_filepath}")
+    quiz_data = pd.read_csv(f"{q_a_filepath}")
     quiz_data = quiz_data.set_index("QID")
 
 #     display(HTML(quiz_data.to_html()))
@@ -968,8 +1013,8 @@ def remove_question(aa):
             #quiz_data = quiz_data.drop(quiz_data.index[int(index_to_remove)])
             quiz_data = quiz_data[quiz_data.index != int(index_to_remove)]
 
-            quiz_data.to_excel(f"{q_a_filepath}",index=True)
-            quiz_data = pd.read_excel(f"{q_a_filepath}")
+            quiz_data.to_csv(f"{q_a_filepath}",index=True)
+            quiz_data = pd.read_csv(f"{q_a_filepath}")
             quiz_data = quiz_data.set_index("QID")
             display(HTML(quiz_data.to_html()))
             print(f'''
@@ -986,7 +1031,7 @@ def edit_quiz():
 
     import_records("edit")
 
-    quiz_data = pd.read_excel(f"{q_a_filepath}")
+    quiz_data = pd.read_csv(f"{q_a_filepath}")
     quiz_data = quiz_data.set_index("QID")
 
     display(HTML(quiz_data.to_html()))
@@ -1014,7 +1059,7 @@ def edit_quiz():
             {edit_menu_text}
             ''').lower()
 #         elif edit_menu == "view":
-#             quiz_data = pd.read_excel(f"{q_a_filepath}")
+#             quiz_data = pd.read_csv(f"{q_a_filepath}")
 #             display(HTML(quiz_data.to_html()))
 #             edit_menu = input(f'''
 #             {edit_menu_text}
