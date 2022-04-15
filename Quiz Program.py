@@ -945,11 +945,9 @@ def edit_question(q_a_filepath):
         display(HTML(quiz_data.to_html()))
     #############################################################################################################
 
-def remove_question(aa):
+def remove_question(q_a_filepath):
 
     global quiz_data
-
-    q_a_filepath = aa
 
     quiz_data = pd.read_csv(f"{q_a_filepath}")
     quiz_data = quiz_data.set_index("QID")
