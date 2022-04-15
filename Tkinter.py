@@ -30,6 +30,16 @@ text_box = tk.Text(fg = "#00ff00",
                    width = 35)
 text_box.pack()
 
+lines = [
+    {'index' : '1.0', 'text' : 'Hello'},
+    {'index' : '3.0', 'text' : 'World'},
+]
+
+for line in lines:
+    text_box.insert(line['index'], line['text'])
+    # text = text_box.get(line['index'])
+    # print(f"Text: {text}")
+
 # Button can be configured to call function when clicked
 # Takes similar parameters to label
 button = tk.Button(text = "Next",
