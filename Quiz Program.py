@@ -29,6 +29,7 @@ def initialise_files():
 
     try:
         quizzes = pd.read_csv(f"{filepath_prefix}quizzes.csv")
+
     except:
 
         quizzes = pd.DataFrame([
@@ -206,15 +207,9 @@ def add_accents(x1):
 #         print(f'''
 #         {word_output}''')
 
-def topic_selection(aa, jj, mm):
+def topic_selection(q_a_filepath, sentence, exemption):
 
     global topic_choice
-
-    q_a_filepath = aa
-
-    sentence = jj
-
-    exemption = mm
 
     quiz_data = pd.read_csv(f"{q_a_filepath}")
     topic_list = list(quiz_data["Topic"])
