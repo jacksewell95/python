@@ -543,9 +543,20 @@ def play_quiz(x):
                 else:
                     ask_chances = 10
 
-                row = [QID, question, incorrect_pass, correct, total_asked, incorrect_pass_rate,
-                       recent_incorrect_pass, recent_correct, recent_total_asked, recent_incorrect_pass_rate,
-                       last_result, ask_chances]
+                row = {
+                    'QID'                        : QID,
+                    'question'                   : question,
+                    'incorrect_pass'             : incorrect_pass,
+                    'correct'                    : correct,
+                    'total_asked'                : total_asked,
+                    'incorrect_pass_rate'        : incorrect_pass_rate,
+                    'recent_incorrect_pass'      : recent_incorrect_pass,
+                    'recent_correct'             : recent_correct,
+                    'recent_total_asked'         : recent_total_asked,
+                    'recent_incorrect_pass_rate' : recent_incorrect_pass_rate,
+                    'last_result'                : last_result,
+                    'ask_chances'                : ask_chances
+                }
 
                 scores.append(row)
                 x_values.append(incorrect_pass_rate)
@@ -553,10 +564,7 @@ def play_quiz(x):
 
         #         print(scores)
 
-            scores_df = pd.DataFrame(scores, columns = ["QID", "question", "incorrect_pass", "correct", "total_asked",
-                                                        "incorrect_pass_rate", "recent_incorrect_pass", "recent_correct",
-                                                        "recent_total_asked", "recent_incorrect_pass_rate", "last_result",
-                                                        "ask_chances"])
+            scores_df = pd.DataFrame(scores)
             scores_df = scores_df.set_index("QID")
             display(HTML(scores_df.to_html()))
 
