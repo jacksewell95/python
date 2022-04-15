@@ -261,7 +261,7 @@ def topic_selection(q_a_filepath, sentence, exemption):
         New Topic:
         ''')
 
-def import_records(z):
+def import_records(verb):
 
     global q_a_filepath
     global q_a_filepath_suffix
@@ -276,13 +276,11 @@ def import_records(z):
     quizzes_idx = quizzes.set_index("quiz_title")
     quiz_titles = quizzes["quiz_title"].to_list()
 
-    verb = z
-
     quiz_titles_series = pd.DataFrame(quiz_titles, columns=["Quizzes"])
     display(HTML(quiz_titles_series.to_html()))
 
     quiz_choice_lower = input(f'''
-    Which quiz would you like to {z}? (Enter name)
+    Which quiz would you like to {verb}? (Enter name)
     ''').lower()
 
     while quiz_choice_lower not in list(quizzes["quiz_title_lower"]):
