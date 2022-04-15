@@ -30,9 +30,26 @@ def initialise_files():
     try:
         quizzes = pd.read_csv(f"{filepath_prefix}quizzes.csv")
     except:
-        quizzes = pd.DataFrame([["Red Dwarf", "red dwarf", "red_dwarf_q_a", "red_dwarf_records"],
-                                ["Peep Show", "peep show", "peep_show_q_a", "peep_show_records"]],
-                        columns = ["quiz_title", "quiz_title_lower", "q_a_filepath", "records_filepath"])
+
+        quizzes = pd.DataFrame([
+            {
+                "quiz_title"       : 'Red Dwarf',
+                "quiz_title_lower" : 'red dwarf',
+                "q_a_filepath"     : 'red_dwarf_q_a',
+                "records_filepath" : 'red_dwarf_records'
+            },
+            {
+                "quiz_title"       : 'Peep Show',
+                "quiz_title_lower" : 'peep show',
+                "q_a_filepath"     : 'peep_show_q_a',
+                "records_filepath" : 'peep_show_records'
+            },
+        ])
+
+        # quizzes = pd.DataFrame([["Red Dwarf", "red dwarf", "red_dwarf_q_a", "red_dwarf_records"],
+        #                         ["Peep Show", "peep show", "peep_show_q_a", "peep_show_records"]],
+        #                 columns = ["quiz_title", "quiz_title_lower", "q_a_filepath", "records_filepath"])
+
         quizzes.to_csv(f"{filepath_prefix}quizzes.csv",index=False)
         print(f'''
         Initialised {filepath_prefix}quizzes.csv''')
@@ -926,14 +943,11 @@ def edit_question(aa):
             quiz_data.loc[ index_to_modify , column ] = new_cell
             #print(quiz_data.loc[ index_to_modify , column ])
 
-
             row_to_edit = quiz_data[quiz_data.index == index_to_modify]
 
             row_to_edit = pd.DataFrame(row_to_edit, columns=["Question","Answer","Topic"])
 
             display(HTML(row_to_edit.to_html()))
-
-
 
             quiz_data.to_csv(f"{q_a_filepath}",index=True)
 
