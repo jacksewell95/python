@@ -449,18 +449,13 @@ def play_quiz(x):
                 all_my_recent_correct_records = all_my_recent_records[all_my_recent_records["result"] == "correct"]
                 all_my_recent_incorrect_pass_records = all_my_recent_records[all_my_recent_records["result"].isin(["incorrect","pass"])]
 
-                all_my_last_10_records_dfs = [my_records[my_records["QID"] == QID].tail(10) for QID in question_list]
-                all_my_last_1_record_dfs = [my_records[my_records["QID"] == QID].tail(1) for QID in question_list]
-
-                all_my_last_10_records = pd.concat(all_my_last_10_records_dfs)
-
-                all_my_last_10_correct_records = all_my_last_10_records[all_my_last_10_records["result"] == "correct"]
-                all_my_last_10_incorrect_pass_records = all_my_last_10_records[all_my_last_10_records["result"].isin(["incorrect","pass"])]
-
-                all_my_last_1_record = pd.concat(all_my_last_1_record_dfs)
-
-                all_my_last_1_record = all_my_last_1_record.set_index("QID")
-                all_my_last_1_record_dict = all_my_last_1_record.to_dict()["result"]
+                for last_no in (1,10):
+                    records = pd.concat([my_records[my_records["QID"] == QID].tail(10) for QID in question_list])
+                    locals()[f"all_my_last_{last_no}_records"] = records
+                    correct_records = records[records["result"] == "correct"]
+                    locals()[f"all_my_last_{last_no}_correct_records"] = correct_records
+                    incorrect_pass_records = all_my_last_10_records[all_my_last_10_records["result"].isin(["incorrect","pass"])]
+                    locals()[f"all_my_last_{last_no}_incorrect_pass_records"] = incorrect_pass_records
 
 #                 display(HTML(all_my_last_10_records.to_html()))
 
