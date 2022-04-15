@@ -194,18 +194,18 @@ def add_accents(word):
 
 def topic_selection(q_a_filepath, sentence, exemption):
 
-    global topic_choice
+    # global topic_choice
 
     quiz_data = pd.read_csv(f"{q_a_filepath}")
-    topic_list = list(quiz_data["Topic"])
+    # topic_list = quiz_data["Topic"].tolist()
+    #
+    # topic_list = [str(i) for i in topic_list]
+    topic_list = list(dict.fromkeys(quiz_data["Topic"].tolist()))
 
-    topic_list = [str(i) for i in topic_list]
-    topic_list = list(dict.fromkeys(topic_list))
-
-    topic_list_num = [topic_list[i] for i in range(0, len(topic_list))]
+    # topic_list_num = [topic_list[i] for i in range(0, len(topic_list))]
     topic_num_dict = {i:topic_list[i] for i in range(0, len(topic_list))}
 
-    topic_list_lower = [i.lower() for i in topic_list]
+    # topic_list_lower = [i.lower() for i in topic_list]
     topic_lower_dict = {z.lower():z for z in topic_list}
 
     topic_list_series = pd.DataFrame(topic_list, columns=["Topics"])
@@ -228,7 +228,7 @@ def topic_selection(q_a_filepath, sentence, exemption):
                 continue
             break
         except:
-            if topic_choice_input.lower() in topic_list_lower:
+            if topic_choice_input.lower() in topic_lower_dict:
                 topic_choice = topic_lower_dict[topic_choice_input.lower()]#.lower()
                 break
             elif topic_choice_input.lower() == exemption:
@@ -245,6 +245,8 @@ def topic_selection(q_a_filepath, sentence, exemption):
         topic_choice = input(f'''
         New Topic:
         ''')
+
+    return topic_choice
 
 def import_records(verb):
 
@@ -351,7 +353,7 @@ def play_quiz(name_title):
             # Give topic choice -- cut data accordingly -- create dicts/list/variable
             #########################################################################
 
-            topic_selection(q_a_filepath, "Select a topic (name/no.) or enter all:", "all")
+            topic_choice = topic_selection(q_a_filepath, "Select a topic (name/no.) or enter all:", "all")
 
         #     print(topic_choice)
 
@@ -730,7 +732,7 @@ def add_question(new_q_a_filepath, outer_function, records_filepath):
                 New Topic:
                 ''')
             else:
-                topic_selection(f"{filepath_prefix}{new_q_a_filepath}.csv", "Topic (select from list or enter new):", "new")
+                topic_choice = topic_selection(f"{filepath_prefix}{new_q_a_filepath}.csv", "Topic (select from list or enter new):", "new")
 
             new_topic = add_accents(topic_choice)
 
@@ -863,8 +865,8 @@ def edit_question(q_a_filepath):
                 New {column}
                 ''')
             else:
-                topic_selection(q_a_filepath, "Select a topic (name/num) or enter new:", "new")
-                new_cell = topic_choice
+                new_cell = topic_selection(q_a_filepath, "Select a topic (name/num) or enter new:", "new")
+                # new_cell = topic_choice
 
             new_cell = add_accents(new_cell)
 
