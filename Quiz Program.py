@@ -786,11 +786,17 @@ def add_question(aa, bb, ff):
                 print(f'''created DF
                 {quiz_data}''')
             else:
-                new_question_record = [new_QID, new_question, new_answer, new_topic]
+                new_question_record = pd.DataFrame([{
+                    'QID'      : new_QID,
+                    'Question' : new_question,
+                    'Answer'   : new_answer,
+                    'Topic'    : new_topic
+                }])
+                # new_question_record = [new_QID, new_question, new_answer, new_topic]
                 quiz_data = pd.read_csv(f"{filepath_prefix}{new_q_a_filepath}.csv")
-                quiz_data = quiz_data.values.tolist()
-                quiz_data.append(new_question_record)
-                quiz_data = pd.DataFrame(quiz_data, columns = ["QID", "Question", "Answer", "Topic"])
+                # quiz_data = quiz_data.values.tolist()
+                # quiz_data.append(new_question_record)
+                quiz_data = pd.concat([quiz_data, new_question_record])
 
             quiz_data = quiz_data.set_index("QID")
 #             print("indexed on QID")
