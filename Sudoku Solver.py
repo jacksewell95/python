@@ -267,6 +267,7 @@ def fill_sudoku(event):
     if event is not None:
         print(f"Solving Sudoku... {event.char}")
     # Move all code to within this function to solve
+    no_guesses = 0
     loops = 0
     guesses = {}
     loops_and_guesses = []
