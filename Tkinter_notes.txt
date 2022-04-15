@@ -1,0 +1,21 @@
+Following course located on:
+https://realpython.com/python-gui-tkinter
+
+Widget types:
+
+  Classic widgets:
+    - Found in the tkinter package
+    - Highly customisable and straighforward
+    - May appear dated
+
+    1. Label - display text
+    2. Button - contain text and perform an action when clicked
+    3. Entry - receives a single line of text entry
+    4. Text - receives multiline text entry
+    5. Frame - rectangular region to group related widgets or provide packing between them
+
+  Themed widgets:
+    - Found in the ttk submodule
+    - Native look and feel for users of a given OS
+    - Modern replacements for legacy widgets
+    - Brand new (e.g. progress bar)
