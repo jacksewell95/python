@@ -452,13 +452,6 @@ def play_quiz(x):
                 all_my_last_10_records_dfs = [my_records[my_records["QID"] == QID].tail(10) for QID in question_list]
                 all_my_last_1_record_dfs = [my_records[my_records["QID"] == QID].tail(1) for QID in question_list]
 
-                # for QID in question_list:
-                #     my_last_10_records = my_records[my_records["QID"] == QID].tail(10)
-                #     all_my_last_10_records_dfs.append(my_last_10_records)
-                #
-                #     my_last_1_record = my_records[my_records["QID"] == QID].tail(1)
-                #     all_my_last_1_record_dfs.append(my_last_1_record)
-
                 all_my_last_10_records = pd.concat(all_my_last_10_records_dfs)
 
                 all_my_last_10_correct_records = all_my_last_10_records[all_my_last_10_records["result"] == "correct"]
