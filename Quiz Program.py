@@ -405,13 +405,6 @@ def play_quiz(name_title):
                     break
 
             now = datetime.datetime.now()
-            # year = now.year
-            # month = f"{now.month:02d}"
-            # day = f"{now.day:02d}"
-            # hour = f"{now.hour:02d}"
-            # minute = f"{now.minute:02d}"
-            # second = f"{now.second:02d}"
-            # quiz_start_time = f"{day}-{month}-{year} {hour}.{minute}.{second}"
             quiz_start_time = now.strftime("%d-%m-%Y %H.%M.%S")
 
             score = 0
@@ -590,13 +583,6 @@ def play_quiz(name_title):
                     user_answer_lower = user_answer.lower()
 
                 now_2 = datetime.datetime.now()
-                # year_2 = now_2.year
-                # month_2 = f"{now_2.month:02d}"
-                # day_2 = f"{now_2.day:02d}"
-                # hour_2 = f"{now_2.hour:02d}"
-                # minute_2 = f"{now_2.minute:02d}"
-                # second_2 = f"{now_2.second:02d}"
-                # answer_time = f"{day_2}-{month_2}-{year_2} {hour_2}.{minute_2}.{second_2}"
                 answer_time = now_2.strftime("%d-%m-%Y %H.%M.%S")
 
                 if user_answer_lower == answer_lower:
