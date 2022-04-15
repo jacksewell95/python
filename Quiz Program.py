@@ -653,37 +653,21 @@ def play_quiz(x):
                     records = records.append(new_row_series, ignore_index=True)
                 else:
                     #print("overwriting old records")
-                    records = pd.DataFrame([[
-                        answer_time,
-                        name_title,
-                        quiz_start_time,
-                        topic_choice,
-                        question_list_count,
-                        quiz_length,
-                        topic,
-                        question_no,
-                        QID,
-                        question,
-                        answer,
-                        user_answer,
-                        result
-                    ]],
-
-                    columns = [
-                        "answer_time",
-                        "name_title",
-                        "quiz_start_time",
-                        "subset_choice",
-                        "question_list_count",
-                        "quiz_length",
-                        "topic",
-                        "question_no",
-                        "QID",
-                        "question",
-                        "answer",
-                        "user_answer",
-                        "result"
-                    ])
+                    records = pd.DataFrame([{
+                        'answer_time'         : answer_time,
+                        'name_title'          : name_title,
+                        'quiz_start_time'     : quiz_start_time,
+                        'topic_choice'        : topic_choice,
+                        'question_list_count' : question_list_count,
+                        'quiz_length'         : quiz_length,
+                        'topic'               : topic,
+                        'question_no'         : question_no,
+                        'QID'                 : QID,
+                        'question'            : question,
+                        'answer'              : answer,
+                        'user_answer'         : user_answer,
+                        'result'              : result
+                    }])
 
                     records.to_csv(f"{records_filepath}",index=False)
 
