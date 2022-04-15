@@ -327,12 +327,10 @@ def import_records(verb):
 
     #print(records)
 
-def play_quiz(x):
+def play_quiz(name_title):
 
     global records
     global topic
-
-    name_title = x
 
     import_records("play")
 
