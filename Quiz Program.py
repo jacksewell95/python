@@ -815,9 +815,7 @@ def create_quiz(quizzes):
     # Ask for first question -- initialise questions data -- loop through extra questions
     #####################################################################################
 
-    records_filepath = new_records_filepath
-
-    add_question(new_q_a_filepath, "new", records_filepath)
+    add_question(new_q_a_filepath, "new", new_records_filepath)
 
 def edit_question(q_a_filepath):
 
