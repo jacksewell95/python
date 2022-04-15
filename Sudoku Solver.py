@@ -241,10 +241,10 @@ def make_grid_image(grid, window, point = 'bootstrap', updated_row = False, upda
         value = grid[row][col]
         if value != 0:
             print_value = value
-            bg = "green"
         else:
             print_value = ""
-            bg = "black"
+
+        bg = "black"
 
         if point == 'bootstrap':
             frame = tk.Frame(master=window, relief=tk.RAISED, borderwidth=1, bg=bg)
@@ -377,6 +377,8 @@ def fill_sudoku(event):
 
     for guess in guesses:
         print(f'{guess} : {guesses[guess]}')
+
+    # grid = grids['easy']
 
 # while True:
 #     tk.update_idletasks()
