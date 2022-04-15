@@ -13,14 +13,7 @@ from IPython.display import display, HTML
 
 #review all while loops to see if they can be smaller (as with title and topic selections)
 
-def initialise_files():
-
-    global filepath_prefix
-    global quizzes
-    global quizzes_idx
-    global quiz_titles
-
-    filepath_prefix = "C:/Documents/Python Programs (csv)/"
+def initialise_files(filepath_prefix):
 
     if not os.path.exists(f"{filepath_prefix}"):
         os.makedirs(f"{filepath_prefix}")
@@ -29,9 +22,7 @@ def initialise_files():
 
     try:
         quizzes = pd.read_csv(f"{filepath_prefix}quizzes.csv")
-
     except:
-
         quizzes = pd.DataFrame([
             {
                 "quiz_title"       : 'Red Dwarf',
@@ -177,8 +168,7 @@ def initialise_files():
         print(f'''
         Initialised {filepath_prefix}peep_show_q_a.csv''')
 
-        quizzes_idx = quizzes.set_index("quiz_title")
-        quiz_titles = quizzes["quiz_title"].to_list()
+    return quizzes
 
 def add_accents(word):
 
@@ -240,7 +230,7 @@ def topic_selection(q_a_filepath, sentence, exemption):
 
     return topic_choice
 
-def import_records(verb):
+def import_records(filepath_prefix, verb):
 
     global q_a_filepath
     global q_a_filepath_suffix
@@ -302,12 +292,12 @@ def import_records(verb):
 
     #print(records)
 
-def play_quiz(name):
+def play_quiz(filepath_prefix, name):
 
     global records
     global topic
 
-    import_records("play")
+    import_records(filepath_prefix, "play")
 
     play_loops = 0
 
@@ -919,9 +909,9 @@ def remove_question(q_a_filepath):
 
     return quiz_data
 
-def edit_quiz():
+def edit_quiz(filepath_prefix):
 
-    import_records("edit")
+    import_records(filepath_prefix, "edit")
 
     quiz_data = pd.read_csv(f"{q_a_filepath}")
     quiz_data = quiz_data.set_index("QID")
@@ -964,9 +954,9 @@ def edit_quiz():
     else:
         pass
 
-def plot_records(name):
+def plot_records(filepath_prefix, name):
 
-    import_records("view")
+    import_records(filepath_prefix, "view")
 
     if True:
         try:
@@ -1035,7 +1025,9 @@ def greeting():
     print(f'''
     Hello {name}!''')
 
-    initialise_files()
+    filepath_prefix = "C:/Documents/Python Programs (csv)/"
+
+    quizzes = initialise_files(filepath_prefix)
 
     menu_text = "Would you like to play, view records, create new, or edit? (Enter exit to quit)"
 
@@ -1045,12 +1037,12 @@ def greeting():
 
     while menu not in ["exit","ex"]:
         if menu in ["play","p"]:
-            play_quiz(name)
+            play_quiz(filepath_prefix, name)
             menu = input(f'''
             {menu_text}
             ''').lower()
         elif menu in ["view records","view","v"]:
-            plot_records(name)
+            plot_records(filepath_prefix, name)
             menu = input(f'''
             {menu_text}
             ''').lower()
@@ -1060,7 +1052,7 @@ def greeting():
             {menu_text}
             ''').lower()
         elif menu in ["edit","ed"]:
-            edit_quiz()
+            edit_quiz(filepath_prefix)
             menu = input(f'''
             {menu_text}
             ''').lower()
