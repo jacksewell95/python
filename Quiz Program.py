@@ -787,24 +787,10 @@ def add_question(aa, bb, ff):
                 {quiz_data}''')
             else:
                 new_question_record = [new_QID, new_question, new_answer, new_topic]
-#                 print(f'''made new row
-#                 {new_question_record}''')
-
                 quiz_data = pd.read_csv(f"{filepath_prefix}{new_q_a_filepath}.csv")
-#                 print(f'''read quiz data
-#                 {quiz_data}''')
-
                 quiz_data = quiz_data.values.tolist()
-#                 print(f'''converted to lol
-#                 {quiz_data}''')
-
                 quiz_data.append(new_question_record)
-#                 print(f'''appended new row
-#                 {quiz_data}''')
-
                 quiz_data = pd.DataFrame(quiz_data, columns = ["QID", "Question", "Answer", "Topic"])
-#                 print(f'''converted to DF
-#                 {quiz_data}''')
 
             quiz_data = quiz_data.set_index("QID")
 #             print("indexed on QID")
