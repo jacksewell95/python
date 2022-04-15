@@ -180,27 +180,17 @@ def initialise_files():
         quizzes_idx = quizzes.set_index("quiz_title")
         quiz_titles = quizzes["quiz_title"].to_list()
 
-def add_accents(word_input):
-
-    global word_output
+def add_accents(word):
 
     accents_dict = {'a1': 'ā', 'a2': 'á', 'a3': 'ǎ', 'a4': 'à', 'e1': 'ē', 'e2': 'é', 'e3': 'ě', 'e4': 'è',
                     'i1': 'ī', 'i2': 'í', 'i3': 'ǐ', 'i4': 'ì', 'o1': 'ō', 'o2': 'ó', 'o3': 'ǒ', 'o4': 'ò',
                     'u1': 'ū', 'u2': 'ú', 'u3': 'ǔ', 'u4': 'ù', 'u5': 'ǖ', 'u6': 'ǘ', 'u7': 'ǚ', 'u8': 'ǜ'}
 
-    accents_input_list = accents_dict.keys()
+    for input_string in accents_dict:
+        if input_string in word:
+            word = word.replace(input_string, accents_dict[input_string])
 
-    distinct_accents_added = 0
-
-    for input_string in accents_input_list:
-        if input_string in word_input:
-            distinct_accents_added = distinct_accents_added + 1
-            output_string = accents_dict[input_string]
-            word_output = word_input.replace(input_string, output_string)
-            word_input = word_output
-
-    if distinct_accents_added == 0:
-        word_output = word_input
+    return word
 
 def topic_selection(q_a_filepath, sentence, exemption):
 
@@ -588,8 +578,7 @@ def play_quiz(name_title):
 
                 ''')
 
-                add_accents(user_answer)
-                user_answer = word_output
+                user_answer = add_accents(user_answer)
 
                 if isinstance(answer, int):
                     try:
@@ -739,14 +728,14 @@ def add_question(new_q_a_filepath, outer_function, records_filepath):
             new_question = input(f'''
             Question:
             ''')
-            add_accents(new_question)
-            new_question = word_output
+
+            new_question = add_accents(new_question)
 
             new_answer = input(f'''
             Answer:
             ''')
-            add_accents(new_answer)
-            new_answer = word_output
+
+            new_answer = add_accents(new_answer)
 
             if questions_so_far == 0 and outer_function == "new":
                 topic_choice = input(f'''
@@ -755,8 +744,7 @@ def add_question(new_q_a_filepath, outer_function, records_filepath):
             else:
                 topic_selection(f"{filepath_prefix}{new_q_a_filepath}.csv", "Topic (select from list or enter new):", "new")
 
-            add_accents(topic_choice)
-            new_topic = word_output
+            new_topic = add_accents(topic_choice)
 
             if questions_so_far == 0 and outer_function == "new":
                 quiz_data = pd.DataFrame([[new_QID, new_question, new_answer, new_topic]],
@@ -797,8 +785,7 @@ def create_quiz(quizzes):
     What is the title of your new quiz?
     ''')
 
-    add_accents(new_quiz_title)
-    new_quiz_title = word_output
+    new_quiz_title = add_accents(new_quiz_title)
 
     new_quiz_title_lower = new_quiz_title.lower()
     new_quiz_title_lower_ = new_quiz_title_lower.replace(" ", "_")
@@ -891,8 +878,7 @@ def edit_question(q_a_filepath):
                 topic_selection(q_a_filepath, "Select a topic (name/num) or enter new:", "new")
                 new_cell = topic_choice
 
-            add_accents(new_cell)
-            new_cell = word_output
+            new_cell = add_accents(new_cell)
 
             #print(quiz_data.loc[ index_to_modify , column ])
             quiz_data.loc[ index_to_modify , column ] = new_cell
@@ -1070,8 +1056,7 @@ def greeting():
     Hi! What's your name?
     ''')
 
-    add_accents(name)
-    name = word_output
+    name = add_accents(name)
 
     name_title = name.title()
     print(f'''
