@@ -302,7 +302,7 @@ def import_records(verb):
 
     #print(records)
 
-def play_quiz(name_title):
+def play_quiz(name):
 
     global records
     global topic
@@ -327,7 +327,7 @@ def play_quiz(name_title):
             except:
                 records = pd.DataFrame([{
                     'answer_time'         : None,
-                    'name_title'          : None,
+                    'name'                : None,
                     'quiz_start_time'     : None,
                     'subset_choice'       : None,
                     'question_list_count' : None,
@@ -406,11 +406,11 @@ def play_quiz(name_title):
             incorrect = 0
 
             ######################################################################
-            # Import records for name_title, calculate ask_chances and production final_question_list
+            # Import records for name, calculate ask_chances and production final_question_list
             ######################################################################
 
             try:
-                my_records = records[records["name_title"] == name_title]
+                my_records = records[records["name"] == name]
 
                 all_my_recent_records = my_records.tail(total_quiz_length)
 
@@ -599,7 +599,7 @@ def play_quiz(name_title):
                 # Initialise records with first result if non-existent -- or append new result
                 ##############################################################################
 
-                new_row = [answer_time, name_title, quiz_start_time, topic_choice, question_list_count, quiz_length,
+                new_row = [answer_time, name, quiz_start_time, topic_choice, question_list_count, quiz_length,
                            topic, question_no, QID, question, answer, user_answer, result]
 
                 if 'records' in globals():
@@ -610,7 +610,7 @@ def play_quiz(name_title):
                     #print("overwriting old records")
                     records = pd.DataFrame([{
                         'answer_time'         : answer_time,
-                        'name_title'          : name_title,
+                        'name'                : name,
                         'quiz_start_time'     : quiz_start_time,
                         'topic_choice'        : topic_choice,
                         'question_list_count' : question_list_count,
@@ -964,18 +964,18 @@ def edit_quiz():
     else:
         pass
 
-def plot_records(name_title):
+def plot_records(name):
 
     import_records("view")
 
     if True:
         try:
-            my_records = records[records["name_title"] == name_title]
+            my_records = records[records["name"] == name]
         except (UnboundLocalError, NameError):
             print('''
             Records do not exist''')
         else:
-            my_records = records[records["name_title"] == name_title]
+            my_records = records[records["name"] == name]
 
             x_values = list(dict.fromkeys(my_records["topic"]))
             quiz_title_series = quizzes[quizzes["quiz_title_lower"] == quiz_choice_lower]["quiz_title"]
@@ -986,7 +986,7 @@ def plot_records(name_title):
                 Records do not exist''')
             else:
                 print(f'''
-                Here is {name_title}'s all-time summary for {chosen_quiz}:''')
+                Here is {name}'s all-time summary for {chosen_quiz}:''')
 
                 x_values = list(dict.fromkeys(my_records["topic"]))
                 x_pos = np.arange(len(x_values))
@@ -1028,15 +1028,12 @@ def plot_records(name_title):
 
 def greeting():
 
-    name = input('''
+    name = add_accents(input('''
     Hi! What's your name?
-    ''')
+    ''')).title()
 
-    name = add_accents(name)
-
-    name_title = name.title()
     print(f'''
-    Hello {name_title}!''')
+    Hello {name}!''')
 
     initialise_files()
 
@@ -1048,12 +1045,12 @@ def greeting():
 
     while menu not in ["exit","ex"]:
         if menu in ["play","p"]:
-            play_quiz(name_title)
+            play_quiz(name)
             menu = input(f'''
             {menu_text}
             ''').lower()
         elif menu in ["view records","view","v"]:
-            plot_records(name_title)
+            plot_records(name)
             menu = input(f'''
             {menu_text}
             ''').lower()
