@@ -724,16 +724,10 @@ def play_quiz(name_title):
     else:
         records.to_csv(f"{records_filepath}",index=False)
 
-def add_question(aa, bb, ff):
+def add_question(new_q_a_filepath, outer_function, records_filepath):
 
     global quiz_data
     global topic_choice
-
-    new_q_a_filepath = aa
-
-    outer_function = bb
-
-    records_filepath = ff
 
     if outer_function == "edit":
         quiz_data = pd.read_csv(f"{q_a_filepath}")
@@ -782,7 +776,7 @@ def add_question(aa, bb, ff):
             add_accents(topic_choice)
             new_topic = word_output
 
-            if questions_so_far == 0 and bb == "new":
+            if questions_so_far == 0 and outer_function == "new":
                 quiz_data = pd.DataFrame([[new_QID, new_question, new_answer, new_topic]],
                                   columns = ["QID", "Question", "Answer", "Topic"])
                 print(f'''created DF
