@@ -809,9 +809,7 @@ def add_question(new_q_a_filepath, outer_function, records_filepath):
     else:
         quiz_data.to_csv(f"{filepath_prefix}{new_q_a_filepath}.csv",index=True)
 
-def create_quiz(y):
-
-    quizzes = y
+def create_quiz(quizzes):
 
     new_quiz_title = input(f'''
     What is the title of your new quiz?
