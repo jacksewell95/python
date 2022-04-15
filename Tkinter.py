@@ -25,6 +25,11 @@ entry.insert(0, "Jack")
 name = entry.get()
 print(f"Name: {name}")
 
+text_box = tk.Text(fg = "#00ff00",
+                   bg = "black",
+                   width = 35)
+text_box.pack()
+
 # Button can be configured to call function when clicked
 # Takes similar parameters to label
 button = tk.Button(text = "Next",
