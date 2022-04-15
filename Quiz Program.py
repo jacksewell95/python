@@ -194,18 +194,10 @@ def add_accents(word):
 
 def topic_selection(q_a_filepath, sentence, exemption):
 
-    # global topic_choice
-
     quiz_data = pd.read_csv(f"{q_a_filepath}")
-    # topic_list = quiz_data["Topic"].tolist()
-    #
-    # topic_list = [str(i) for i in topic_list]
+
     topic_list = list(dict.fromkeys(quiz_data["Topic"].tolist()))
-
-    # topic_list_num = [topic_list[i] for i in range(0, len(topic_list))]
     topic_num_dict = {i:topic_list[i] for i in range(0, len(topic_list))}
-
-    # topic_list_lower = [i.lower() for i in topic_list]
     topic_lower_dict = {z.lower():z for z in topic_list}
 
     topic_list_series = pd.DataFrame(topic_list, columns=["Topics"])
@@ -866,7 +858,6 @@ def edit_question(q_a_filepath):
                 ''')
             else:
                 new_cell = topic_selection(q_a_filepath, "Select a topic (name/num) or enter new:", "new")
-                # new_cell = topic_choice
 
             new_cell = add_accents(new_cell)
 
