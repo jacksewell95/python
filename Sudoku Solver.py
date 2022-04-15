@@ -237,7 +237,9 @@ def make_grid_image(grid, window, point = 'bootstrap', updated_row = False, upda
 
     for cord in cords:
         row, col = cord[0], cord[1]
-        x, y = (col + 1) * 35, (row + 1) * 35
+        x, y = ((col + 1) * 35), ((row + 1) * 35)
+        # print(f"{x}, {y}")
+
         value = grid[row][col]
         if value != 0:
             print_value = value
