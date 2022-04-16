@@ -117,7 +117,7 @@ def get_item_urls(skip_section_urls=[]):
             sleep(0.05)
             print(f'''{len(urls_lol)} item urls scraped''')
 
-    urls_df_filepath = 'D:/Yourdrobe/hm_urls_df.csv'
+    urls_df_filepath = 'D:/Scraping/hm_urls_df.csv'
 
     urls_df = pd.DataFrame(urls_lol)
 
@@ -208,8 +208,8 @@ def get_item_data(urls_lol):
 
     item_data_df = pd.DataFrame(item_data)
 
-    item_data_df.to_csv('D:/Yourdrobe/H&M.csv', index=False)
-    print('Written to D:/Yourdrobe/H&M.csv')
+    item_data_df.to_csv('D:/Scraping/H&M.csv', index=False)
+    print('Written to D:/Scraping/H&M.csv')
     display(HTML(item_data_df.head(200).to_html()))
 
     return item_data_df
