@@ -125,7 +125,7 @@ display(HTML(urls_df.head(200).to_html()))
 
 ####################################################################################################
 
-item_data_lol = []
+item_data = []
 
 for urls in urls_lol[0:5]:
 
@@ -186,15 +186,22 @@ for urls in urls_lol[0:5]:
     price_list = [url.text for url in html_span if 'price-value' in url.get('class','')]
     price = price_list[0].strip()
 
-    row = [urls[0], urls[1], urls[2], urls[3], itemname, colour, price]
+    record = {
+        'section_url'   : urls[0],
+        'dept_url'      : urls[1],
+        'dept_url_page' : urls[2],
+        'item_url'      : urls[3],
+        'item_name'     : itemname,
+        'colour'        : colour,
+        'price'         : price,
+    }
 
-    item_data_lol.append(row)
-    print(row)
+    item_data.append(record)
+    print(record)
     sleep(5)
 
-item_data = pd.DataFrame(item_data_lol, columns = ["section_url", "dept_url", "dept_url_page", "item_url",
-                                                   "item_name", "colour", "price"])
+item_data_df = pd.DataFrame(item_data)
 
-item_data.to_csv('D:/Yourdrobe/H&M.csv', index=False)
+item_data_df.to_csv('D:/Yourdrobe/H&M.csv', index=False)
 print('Written to D:/Yourdrobe/H&M.csv')
-display(HTML(item_data.head(200).to_html()))
+display(HTML(item_data_df.head(200).to_html()))
