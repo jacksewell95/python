@@ -111,14 +111,23 @@ for section_url in section_url_list[0:1]:
         item_urls_list_total += item_urls_list_new
 
         for item_url_new in item_urls_list_new:
-            row = [section_url, dept_url, dept_url_page, item_url_new]
-            urls_lol.append(row)
+
+            record = {
+                'section_url'   : section_url,
+                'dept_url'      : dept_url,
+                'dept_url_page' : dept_url_page,
+                'item_url'      : item_url_new
+            }
+
+            urls_lol.append(record)
+
         sleep(0.05)
         print(f'''{len(urls_lol)} item urls scraped''')
 
 urls_df_filepath = 'D:/Yourdrobe/hm_urls_df.csv'
 
-urls_df = pd.DataFrame(urls_lol, columns = ["section_url", "dept_url", "dept_url_page", "item_url"])
+urls_df = pd.DataFrame(urls_lol)
+
 urls_df.to_csv(urls_df_filepath, index=False)
 print(f'Written to {urls_df_filepath}')
 display(HTML(urls_df.head(200).to_html()))
@@ -129,9 +138,9 @@ item_data = []
 
 for urls in urls_lol[0:5]:
 
-    item_url = urls[3].replace('https://www2.hm.com','')
+    item_url = urls['item_url'].replace('https://www2.hm.com','')
 
-    item_url_request = requests.get(urls[3], headers=headers)
+    item_url_request = requests.get(urls['item_url'], headers=headers)
     item_url_request_soup = BeautifulSoup(item_url_request.text, 'html.parser')
 
     html_h1 = item_url_request_soup.findAll('h1')
@@ -187,10 +196,10 @@ for urls in urls_lol[0:5]:
     price = price_list[0].strip()
 
     record = {
-        'section_url'   : urls[0],
-        'dept_url'      : urls[1],
-        'dept_url_page' : urls[2],
-        'item_url'      : urls[3],
+        'section_url'   : urls['section_url'],
+        'dept_url'      : urls['dept_url'],
+        'dept_url_page' : urls['dept_url_page'],
+        'item_url'      : urls['item_url'],
         'item_name'     : itemname,
         'colour'        : colour,
         'price'         : price,
