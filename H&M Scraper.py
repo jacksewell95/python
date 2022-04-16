@@ -30,7 +30,7 @@ def make_initial_request(initial_search_url, ua):
 
 ####################################################################################################
 
-def get_item_urls():
+def get_item_urls(skip_section_urls=[]):
 
     url_request = requests.get(next_initial_search_url, headers=headers)
     url_request_soup = BeautifulSoup(url_request.text, 'html.parser')
@@ -46,12 +46,8 @@ def get_item_urls():
     {section_url_list}
     ''')
 
-    section_url_list.remove('https://www2.hm.com/en_gb/ladies.html')
-    section_url_list.remove('https://www2.hm.com/en_gb/divided.html')
-    section_url_list.remove('https://www2.hm.com/en_gb/kids.html')
-    section_url_list.remove('https://www2.hm.com/en_gb/home.html')
-    section_url_list.remove('https://www2.hm.com/en_gb/sale.html')
-    section_url_list.remove('https://www2.hm.com/en_gb/sustainability.html')
+    for skip_section_url in skip_section_urls:
+        section_url_list.remove(skip_section_url)
 
     print(f'''{len(section_url_list)} section urls:
     {section_url_list}''')
@@ -221,6 +217,15 @@ def get_item_data(urls_lol):
 initial_search_url = 'https://www2.hm.com/en_gb/index.html'
 ua = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
 
+skip_section_urls = [
+    'https://www2.hm.com/en_gb/ladies.html',
+    'https://www2.hm.com/en_gb/divided.html',
+    'https://www2.hm.com/en_gb/kids.html',
+    'https://www2.hm.com/en_gb/home.html',
+    'https://www2.hm.com/en_gb/sale.html',
+    'https://www2.hm.com/en_gb/sustainability.html',
+]
+
 ir_status_code = make_initial_request(initial_search_url, ua)
-urls_lol = get_item_urls()
+urls_lol = get_item_urls(skip_section_urls)
 item_data_df = get_item_data(urls_lol)
