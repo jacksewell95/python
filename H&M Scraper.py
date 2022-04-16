@@ -30,7 +30,7 @@ def make_initial_request(initial_search_url, ua):
 
 ####################################################################################################
 
-def get_item_urls(skip_section_urls=[]):
+def get_item_urls(item_urls_df_filepath, skip_section_urls=[]):
 
     url_request = requests.get(next_initial_search_url, headers=headers)
     url_request_soup = BeautifulSoup(url_request.text, 'html.parser')
@@ -117,19 +117,17 @@ def get_item_urls(skip_section_urls=[]):
             sleep(0.05)
             print(f'''{len(urls_lol)} item urls scraped''')
 
-    urls_df_filepath = 'D:/Scraping/hm_urls_df.csv'
-
     urls_df = pd.DataFrame(urls_lol)
 
-    urls_df.to_csv(urls_df_filepath, index=False)
-    print(f'Written to {urls_df_filepath}')
+    urls_df.to_csv(item_urls_df_filepath, index=False)
+    print(f'Written to {item_urls_df_filepath}')
     display(HTML(urls_df.head(200).to_html()))
 
     return urls_lol
 
 ####################################################################################################
 
-def get_item_data(urls_lol):
+def get_item_data(item_data_df_filepath, urls_lol):
 
     item_data = []
 
@@ -208,14 +206,17 @@ def get_item_data(urls_lol):
 
     item_data_df = pd.DataFrame(item_data)
 
-    item_data_df.to_csv('D:/Scraping/H&M.csv', index=False)
-    print('Written to D:/Scraping/H&M.csv')
+    item_data_df.to_csv(item_data_df_filepath, index=False)
+    print(f"Written to {item_data_df_filepath})
     display(HTML(item_data_df.head(200).to_html()))
 
     return item_data_df
 
 initial_search_url = 'https://www2.hm.com/en_gb/index.html'
 ua = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
+
+item_urls_df_filepath = 'D:/Scraping/hm_urls_df.csv'
+item_data_df_filepath = 'D:/Scraping/H&M.csv'
 
 skip_section_urls = [
     'https://www2.hm.com/en_gb/ladies.html',
@@ -227,5 +228,5 @@ skip_section_urls = [
 ]
 
 ir_status_code = make_initial_request(initial_search_url, ua)
-urls_lol = get_item_urls(skip_section_urls)
-item_data_df = get_item_data(urls_lol)
+urls_lol = get_item_urls(item_urls_df_filepath, skip_section_urls)
+item_data_df = get_item_data(item_data_df_filepath, urls_lol)
