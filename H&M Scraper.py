@@ -212,6 +212,8 @@ def get_item_data(item_data_df_filepath, urls_lol):
 
     return item_data_df
 
+####################################################################################################
+
 initial_search_url = 'https://www2.hm.com/en_gb/index.html'
 ua = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
 
