@@ -10,18 +10,28 @@ from time import sleep
 
 # https://www2.hm.com/robots.txt
 
-user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
-headers = {'User-Agent': user_agent}
-
-next_initial_search_url = 'https://www2.hm.com/en_gb/index.html'
-initial_request = requests.get(next_initial_search_url, headers=headers)
-
-initial_request.status_code
-
 ####################################################################################################
 
-initial_request_soup = BeautifulSoup(initial_request.text, 'html.parser')
-type(initial_request_soup)
+def make_initial_request(initial_search_url, ua):
+
+    initial_request = requests.get(
+        initial_search_url',
+        headers={'User-Agent': ua}
+    )
+
+    ir_status_code = initial_request.status_code
+    print(f"Status Code: {ir_status_code}")
+
+    initial_request_soup = BeautifulSoup(initial_request.text, 'html.parser')
+    initial_request_soup_type = type(initial_request_soup)
+    print(f"Soup Type: {initial_request_soup_type}")
+
+    return ir_status_code
+
+initial_search_url = 'https://www2.hm.com/en_gb/index.html'
+ua = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
+
+ir_status_code = make_initial_request(initial_search_url, ua)
 
 ####################################################################################################
 
