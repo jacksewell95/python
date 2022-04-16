@@ -1,4 +1,6 @@
 # !conda install selenium
+# pip install bs4
+
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
@@ -12,11 +14,11 @@ from time import sleep
 
 ####################################################################################################
 
-def make_initial_request(initial_search_url, ua):
+def make_initial_request(initial_search_url, headers):
 
     initial_request = requests.get(
-        initial_search_url',
-        headers={'User-Agent': ua}
+        initial_search_url,
+        headers=headers
     )
 
     ir_status_code = initial_request.status_code
@@ -30,9 +32,9 @@ def make_initial_request(initial_search_url, ua):
 
 ####################################################################################################
 
-def get_item_urls(item_urls_df_filepath, skip_section_urls=[]):
+def get_item_urls(initial_search_url, item_urls_df_filepath, skip_section_urls=[]):
 
-    url_request = requests.get(next_initial_search_url, headers=headers)
+    url_request = requests.get(initial_search_url, headers=headers)
     url_request_soup = BeautifulSoup(url_request.text, 'html.parser')
     urls = url_request_soup.findAll('a')
     section_urls = ['https://www2.hm.com' + url.get('href','') for url in urls
@@ -47,7 +49,10 @@ def get_item_urls(item_urls_df_filepath, skip_section_urls=[]):
     ''')
 
     for skip_section_url in skip_section_urls:
-        section_url_list.remove(skip_section_url)
+        try:
+            section_url_list.remove(skip_section_url)
+        except:
+            print(f"{skip_section_url} not in section_url_list")
 
     print(f'''{len(section_url_list)} section urls:
     {section_url_list}''')
@@ -207,7 +212,7 @@ def get_item_data(item_data_df_filepath, urls_lol):
     item_data_df = pd.DataFrame(item_data)
 
     item_data_df.to_csv(item_data_df_filepath, index=False)
-    print(f"Written to {item_data_df_filepath})
+    print(f"Written to {item_data_df_filepath}")
     display(HTML(item_data_df.head(200).to_html()))
 
     return item_data_df
@@ -215,7 +220,7 @@ def get_item_data(item_data_df_filepath, urls_lol):
 ####################################################################################################
 
 initial_search_url = 'https://www2.hm.com/en_gb/index.html'
-ua = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
+headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'}
 
 item_urls_df_filepath = 'D:/Scraping/hm_urls_df.csv'
 item_data_df_filepath = 'D:/Scraping/H&M.csv'
@@ -229,6 +234,6 @@ skip_section_urls = [
     'https://www2.hm.com/en_gb/sustainability.html',
 ]
 
-ir_status_code = make_initial_request(initial_search_url, ua)
-urls_lol = get_item_urls(item_urls_df_filepath, skip_section_urls)
+ir_status_code = make_initial_request(initial_search_url, headers)
+urls_lol = get_item_urls(initial_search_url, item_urls_df_filepath, skip_section_urls)
 item_data_df = get_item_data(item_data_df_filepath, urls_lol)
