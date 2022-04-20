@@ -749,8 +749,8 @@ def create_quiz(filepath_prefix):
 
         'new_quiz_title'       : new_quiz_title,
         'new_quiz_title_lower' : new_quiz_title.lower(),
-        'new_q_a_filepath'     : f"{new_quiz_title.lower().replace(" ", "_")}_q_a",
-        'new_records_filepath' : f"{new_quiz_title.lower().replace(" ", "_")}_records",
+        'new_q_a_filepath'     : f"{new_quiz_title.lower().replace(' ', '_')}_q_a",
+        'new_records_filepath' : f"{new_quiz_title.lower().replace(' ', '_')}_records",
 
     }
 
