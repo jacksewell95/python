@@ -433,21 +433,21 @@ def play_quiz(filepath_prefix, name):
 
                     my_correct_records = all_my_last_10_correct_records[all_my_last_10_correct_records["QID"] == QID]
                     my_correct_records_question = my_correct_records["QID"]
-                    correct = 0 + len(my_correct_records_question)
+                    correct = len(my_correct_records_question)
 
                     my_incorrect_pass_records = all_my_last_10_incorrect_pass_records[all_my_last_10_incorrect_pass_records["QID"] == QID]
                     my_incorrect_pass_records_question = my_incorrect_pass_records["QID"]
-                    incorrect_pass = 0 + len(my_incorrect_pass_records_question)
+                    incorrect_pass = len(my_incorrect_pass_records_question)
 
                     total_asked = incorrect_pass + correct
 
                     my_recent_correct_records = all_my_recent_correct_records[all_my_recent_correct_records["QID"] == QID]
                     my_recent_correct_records_question = my_recent_correct_records["QID"]
-                    recent_correct = 0 + len(my_recent_correct_records_question)
+                    recent_correct = len(my_recent_correct_records_question)
 
                     my_recent_incorrect_pass_records = all_my_recent_incorrect_pass_records[all_my_recent_incorrect_pass_records["QID"] == QID]
                     my_recent_incorrect_pass_records_question = my_recent_incorrect_pass_records["QID"]
-                    recent_incorrect_pass = 0 + len(my_recent_incorrect_pass_records_question)
+                    recent_incorrect_pass = len(my_recent_incorrect_pass_records_question)
 
                     recent_total_asked = recent_incorrect_pass + recent_correct
                 else:
