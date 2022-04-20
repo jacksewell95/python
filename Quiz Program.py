@@ -558,8 +558,7 @@ def play_quiz(filepath_prefix, name):
                 else:
                     user_answer_lower = user_answer.lower()
 
-                now_2 = datetime.datetime.now()
-                answer_time = now_2.strftime("%d-%m-%Y %H.%M.%S")
+                answer_time = datetime.datetime.now().strftime("%d-%m-%Y %H.%M.%S")
 
                 if user_answer_lower == answer_lower:
                     print('''
