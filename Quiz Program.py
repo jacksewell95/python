@@ -540,7 +540,7 @@ def play_quiz(filepath_prefix, name):
                 else:
                     answer_lower = answer.lower()
 
-                question_no = question_no+1
+                question_no += 1
 
                 user_answer = input(f'''
                 {question_no} of {quiz_length}:
@@ -565,17 +565,17 @@ def play_quiz(filepath_prefix, name):
                     print('''
                     Correct!''')
                     result = "correct"
-                    score = score + 1
+                    score += 1
                 elif user_answer_lower == "pass":
                     print(f'''
                     Pass. The answer is {answer}''')
                     result = "pass"
-                    passes = passes + 1
+                    passes += 1
                 else:
                     print(f'''
                     Incorrect. The answer is {answer}''')
                     result = "incorrect"
-                    incorrect = incorrect + 1
+                    incorrect += 1
 
                 ##############################################################################
                 # Initialise records with first result if non-existent -- or append new result
