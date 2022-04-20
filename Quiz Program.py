@@ -689,20 +689,19 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, filepath_pr
             Question:
             '''))
 
-            new_answer = input(f'''
+            new_answer = add_accents(input(f'''
             Answer:
-            ''')
-
-            new_answer = add_accents(new_answer)
+            '''))
 
             if questions_so_far == 0 and outer_function == "new":
-                topic_choice = input(f'''
+                new_topic = add_accents(input(f'''
                 New Topic:
-                ''')
+                '''))
             else:
-                topic_choice = topic_selection(f"{filepath_prefix}{new_q_a_filepath}.csv", "Topic (select from list or enter new):", "new")
-
-            new_topic = add_accents(topic_choice)
+                new_topic = add_accents(topic_selection(
+                    f"{filepath_prefix}{new_q_a_filepath}.csv",
+                    "Topic (select from list or enter new):",
+                    "new"))
 
             new_quiz_data = [{
                 'QID'      : new_QID,
