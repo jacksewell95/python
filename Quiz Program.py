@@ -20,9 +20,9 @@ def initialise_files(filepath_prefix):
         print(f'''
         Initialised {filepath_prefix}''')
 
-    try:
+    if os.path.exists(f"{filepath_prefix}quizzes.csv"):
         quizzes = pd.read_csv(f"{filepath_prefix}quizzes.csv")
-    except:
+    else:
         quizzes = pd.DataFrame([
             {
                 "quiz_title"       : 'Red Dwarf',
@@ -42,9 +42,7 @@ def initialise_files(filepath_prefix):
         print(f'''
         Initialised {filepath_prefix}quizzes.csv''')
 
-    try:
-        pd.read_csv(f"{filepath_prefix}red_dwarf_q_a.csv")
-    except:
+    if not os.path.exists(f"{filepath_prefix}red_dwarf_q_a.csv"):
         red_dwarf_q_a = pd.DataFrame(
         [[1, 'In which episode does the crew originally get wiped out?', 'The End', 'Series I'],
          [2, 'In which episode does Lister see that there will be twin boys on Red Dwarf?', 'Future Echoes', 'Series I'],
@@ -122,9 +120,7 @@ def initialise_files(filepath_prefix):
         print(f'''
         Initialised {filepath_prefix}red_dwarf_q_a.csv''')
 
-    try:
-        pd.read_csv(f"{filepath_prefix}peep_show_q_a.csv")
-    except:
+    if not os.path.exists(f"{filepath_prefix}peep_show_q_a.csv"):
         peep_show_q_a = pd.DataFrame(
         [[1, 'In which episode does Mark get bullied by children?', 'Warring Factions', 'Series 1'],
          [2, 'In which episode does Jeremy gurn at his JLB interview?', 'The Interview', 'Series 1'],
