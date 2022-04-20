@@ -581,13 +581,27 @@ def play_quiz(filepath_prefix, name):
                 # Initialise records with first result if non-existent -- or append new result
                 ##############################################################################
 
-                new_row = [answer_time, name, quiz_start_time, topic_choice, question_list_count, quiz_length,
-                           topic, question_no, QID, question, answer, user_answer, result]
+                new_row = {
+                    'answer_time'         : answer_time,
+                    'name'                : name,
+                    'quiz_start_time'     : quiz_start_time,
+                    'topic_choice'        : topic_choice,
+                    'question_list_count' : question_list_count,
+                    'quiz_length'         : quiz_length,
+                    'topic'               : topic,
+                    'question_no'         : question_no,
+                    'QID'                 : QID,
+                    'question'            : question,
+                    'answer'              : answer,
+                    'user_answer'         : user_answer,
+                    'result'              : result,
+                }
 
                 if 'records' in globals():
                     #print("appending new records to old")
-                    new_row_series = pd.Series(new_row, index = records.columns)
-                    records = records.append(new_row_series, ignore_index=True)
+                    records = records.to_dict(orient='records')
+                    records.append(new_row)
+                    records = pd.DataFrame(records)
                 else:
                     #print("overwriting old records")
                     records = pd.DataFrame([{
