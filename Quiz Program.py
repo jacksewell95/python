@@ -685,11 +685,9 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, filepath_pr
                     QID_list = quiz_data.index.to_list()
                 new_QID = max(QID_list) + 1
 
-            new_question = input(f'''
+            new_question = add_accents(input(f'''
             Question:
-            ''')
-
-            new_question = add_accents(new_question)
+            '''))
 
             new_answer = input(f'''
             Answer:
