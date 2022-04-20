@@ -725,6 +725,7 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, filepath_pr
                 print(f'''created DF
                 {quiz_data}''')
 
+            quiz_data = pd.DataFrame(quiz_data)
             quiz_data = quiz_data.set_index("QID")
 #             print("indexed on QID")
             quiz_data.to_csv(f"{filepath_prefix}{new_q_a_filepath}.csv",index=True)
