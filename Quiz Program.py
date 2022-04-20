@@ -20,9 +20,7 @@ def initialise_files(filepath_prefix):
         print(f'''
         Initialised {filepath_prefix}''')
 
-    if os.path.exists(f"{filepath_prefix}quizzes.csv"):
-        quizzes = pd.read_csv(f"{filepath_prefix}quizzes.csv")
-    else:
+    if not os.path.exists(f"{filepath_prefix}quizzes.csv"):
         quizzes = pd.DataFrame([
             {
                 "quiz_title"       : 'Red Dwarf',
@@ -163,8 +161,6 @@ def initialise_files(filepath_prefix):
         peep_show_q_a.to_csv(f"{filepath_prefix}peep_show_q_a.csv",index=True)
         print(f'''
         Initialised {filepath_prefix}peep_show_q_a.csv''')
-
-    return quizzes
 
 def add_accents(word):
 
@@ -663,7 +659,7 @@ def play_quiz(filepath_prefix, name):
     else:
         records.to_csv(f"{records_filepath}",index=False)
 
-def add_question(new_q_a_filepath, outer_function, records_filepath):
+def add_question(new_q_a_filepath, outer_function, records_filepath, filepath_prefix):
 
     global quiz_data
     global topic_choice
@@ -747,11 +743,13 @@ def add_question(new_q_a_filepath, outer_function, records_filepath):
     else:
         quiz_data.to_csv(f"{filepath_prefix}{new_q_a_filepath}.csv",index=True)
 
-def create_quiz(quizzes):
+def create_quiz(filepath_prefix):
 
     new_quiz_title = input(f'''
     What is the title of your new quiz?
     ''')
+
+    quizzes = pd.read_csv(f"{filepath_prefix}quizzes.csv")
 
     new_quiz_title = add_accents(new_quiz_title)
 
@@ -770,7 +768,7 @@ def create_quiz(quizzes):
     # Ask for first question -- initialise questions data -- loop through extra questions
     #####################################################################################
 
-    add_question(new_q_a_filepath, "new", new_records_filepath)
+    add_question(new_q_a_filepath, "new", new_records_filepath, filepath_prefix)
 
 def edit_question(q_a_filepath):
 
@@ -922,7 +920,7 @@ def edit_quiz(filepath_prefix):
 
     while edit_menu not in ["back","b"]:
         if edit_menu in ["add","a"]:
-            add_question(q_a_filepath_suffix, "edit", records_filepath)
+            add_question(q_a_filepath_suffix, "edit", records_filepath, filepath_prefix)
             edit_menu = input(f'''
             {edit_menu_text}
             ''').lower()
@@ -1023,7 +1021,7 @@ def greeting():
 
     filepath_prefix = "C:/Documents/Python Programs (csv)/"
 
-    quizzes = initialise_files(filepath_prefix)
+    initialise_files(filepath_prefix)
 
     menu_text = "Would you like to play, view records, create new, or edit? (Enter exit to quit)"
 
@@ -1043,7 +1041,7 @@ def greeting():
             {menu_text}
             ''').lower()
         elif menu in ["create new","create","c"]:
-            create_quiz(quizzes)
+            create_quiz(filepath_prefix)
             menu = input(f'''
             {menu_text}
             ''').lower()
