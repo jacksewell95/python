@@ -745,31 +745,25 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, filepath_pr
 
 def create_quiz(filepath_prefix):
 
-    new_quiz_title = input(f'''
+    new_quiz_title = add_accents(input(f'''
     What is the title of your new quiz?
-    ''')
+    '''))
 
     quizzes = pd.read_csv(f"{filepath_prefix}quizzes.csv").to_dict(orient='records')
-
-    new_quiz_title = add_accents(new_quiz_title)
-
-    new_quiz_title_lower = new_quiz_title.lower()
-    new_quiz_title_lower_ = new_quiz_title_lower.replace(" ", "_")
-    new_q_a_filepath = new_quiz_title_lower_ + "_q_a"
-    new_records_filepath = new_quiz_title_lower_ + "_records"
 
     new_quiz_record = {
 
         'new_quiz_title'       : new_quiz_title,
-        'new_quiz_title_lower' : new_quiz_title_lower,
-        'new_q_a_filepath'     : new_q_a_filepath,
-        'new_records_filepath' : new_records_filepath,
+        'new_quiz_title_lower' : new_quiz_title.lower(),
+        'new_q_a_filepath'     : f"{new_quiz_title.lower().replace(" ", "_")}_q_a",
+        'new_records_filepath' : f"{new_quiz_title.lower().replace(" ", "_")}_records",
 
     }
 
     quizzes.append(new_quiz_record)
 
-    pd.DataFrame(quizzes).to_csv(f"{filepath_prefix}quizzes.csv",index=False)
+    quizzes_df = pd.DataFrame(quizzes)
+    quizzes_df.to_csv(f"{filepath_prefix}quizzes.csv",index=False)
 
     #####################################################################################
     # Ask for first question -- initialise questions data -- loop through extra questions
