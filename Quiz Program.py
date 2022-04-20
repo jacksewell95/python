@@ -778,12 +778,12 @@ def edit_question(q_a_filepath):
     quiz_data = pd.read_csv(f"{q_a_filepath}")
     quiz_data = quiz_data.set_index("QID")
 
-    edit_question_menu = "Which row would you like to edit? (Enter QID)"
-    edit_question_menu_2 = "Would you like to modify the Question, Answer or Topic?"
-    edit_question_menu_3 = "Would you like to make another edit to this row? (Yes/No or Enter for No)"
+    row_edit_menu = "Which row would you like to edit? (Enter QID)"
+    field_edit_menu = "Would you like to modify the Question, Answer or Topic?"
+    another_edit_menu = "Would you like to make another edit to this row? (Yes/No or Enter for No)"
 
     index_to_modify = input(f'''
-    {edit_question_menu}
+    {row_edit_menu}
     ''')
 
     while True:
@@ -795,7 +795,7 @@ def edit_question(q_a_filepath):
             else:
                 index_to_modify = input(f'''
                 Sorry that wasn't possible
-                {edit_question_menu}
+                {row_edit_menu}
                 ''')
                 continue
             row_to_edit = quiz_data[quiz_data.index == index_to_modify]
@@ -805,7 +805,7 @@ def edit_question(q_a_filepath):
         except:
             index_to_modify = input(f'''
             Sorry that wasn't possible
-            {edit_question_menu}
+            {row_edit_menu}
             ''')
             continue
 
@@ -816,7 +816,7 @@ def edit_question(q_a_filepath):
         if row_modifications_made == 0 or another_row_modification_lower in ["yes","y"]:
 
             column_to_modify = input(f'''
-            {edit_question_menu_2}
+            {field_edit_menu}
             ''')
 
             while True:
@@ -832,7 +832,7 @@ def edit_question(q_a_filepath):
                 else:
                     column_to_modify = input(f'''
                     Sorry, I didn't understand that
-                    {edit_question_menu_2}
+                    {field_edit_menu}
                     ''')
             else:
                 pass
@@ -861,7 +861,7 @@ def edit_question(q_a_filepath):
             row_modifications_made = row_modifications_made + 1
 
             another_row_modification_lower = input(f'''
-            {edit_question_menu_3}
+            {another_edit_menu}
             ''').lower()
 
         elif another_row_modification_lower in ["no","n"]:
@@ -870,7 +870,7 @@ def edit_question(q_a_filepath):
         else:
             another_row_modification_lower = input(f'''
             Sorry I didn't understand that
-            {edit_question_menu_3}
+            {another_edit_menu}
             ''').lower()
     #############################################################################################################
     else:
