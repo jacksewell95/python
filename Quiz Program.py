@@ -711,8 +711,12 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, filepath_pr
             new_topic = add_accents(topic_choice)
 
             if questions_so_far == 0 and outer_function == "new":
-                quiz_data = pd.DataFrame([[new_QID, new_question, new_answer, new_topic]],
-                                  columns = ["QID", "Question", "Answer", "Topic"])
+                quiz_data = pd.DataFrame([{
+                    'QID'      : new_QID,
+                    'Question' : new_question,
+                    'Answer'   : new_answer,
+                    'Topic'    : new_topic,
+                }])
                 print(f'''created DF
                 {quiz_data}''')
             else:
@@ -720,7 +724,7 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, filepath_pr
                     'QID'      : new_QID,
                     'Question' : new_question,
                     'Answer'   : new_answer,
-                    'Topic'    : new_topic
+                    'Topic'    : new_topic,
                 }])
                 quiz_data = pd.read_csv(f"{filepath_prefix}{new_q_a_filepath}.csv")
                 quiz_data = pd.concat([quiz_data, new_question_record])
