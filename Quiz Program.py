@@ -604,22 +604,7 @@ def play_quiz(filepath_prefix, name):
                     records = pd.DataFrame(records)
                 else:
                     #print("overwriting old records")
-                    records = pd.DataFrame([{
-                        'answer_time'         : answer_time,
-                        'name'                : name,
-                        'quiz_start_time'     : quiz_start_time,
-                        'topic_choice'        : topic_choice,
-                        'question_list_count' : question_list_count,
-                        'quiz_length'         : quiz_length,
-                        'topic'               : topic,
-                        'question_no'         : question_no,
-                        'QID'                 : QID,
-                        'question'            : question,
-                        'answer'              : answer,
-                        'user_answer'         : user_answer,
-                        'result'              : result
-                    }])
-
+                    records = pd.DataFrame([new_row])
                     records.to_csv(f"{records_filepath}",index=False)
 
                 if result in ["incorrect","pass"]:
