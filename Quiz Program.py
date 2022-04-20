@@ -21,7 +21,7 @@ def initialise_files(filepath_prefix):
         Initialised {filepath_prefix}''')
 
     if not os.path.exists(f"{filepath_prefix}quizzes.csv"):
-        quizzes = pd.DataFrame([
+        pd.DataFrame([
             {
                 "quiz_title"       : 'Red Dwarf',
                 "quiz_title_lower" : 'red dwarf',
@@ -34,9 +34,7 @@ def initialise_files(filepath_prefix):
                 "q_a_filepath"     : 'peep_show_q_a',
                 "records_filepath" : 'peep_show_records'
             },
-        ])
-
-        quizzes.to_csv(f"{filepath_prefix}quizzes.csv",index=False)
+        ]).to_csv(f"{filepath_prefix}quizzes.csv",index=False)
         print(f'''
         Initialised {filepath_prefix}quizzes.csv''')
 
