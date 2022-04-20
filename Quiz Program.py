@@ -597,12 +597,10 @@ def play_quiz(filepath_prefix, name):
                 }
 
                 if 'records' in globals():
-                    #print("appending new records to old")
                     records = records.to_dict(orient='records')
                     records.append(new_row)
                     records = pd.DataFrame(records)
                 else:
-                    #print("overwriting old records")
                     records = pd.DataFrame([new_row])
                     records.to_csv(f"{records_filepath}",index=False)
 
@@ -639,7 +637,7 @@ def play_quiz(filepath_prefix, name):
                 {passes_and_incorrect}''')
                 display(HTML(incorrect_pass_df.to_html()))
 
-            play_loops = play_loops + 1
+            play_loops += 1
 
             records.to_csv(f"{records_filepath}",index=False)
 
