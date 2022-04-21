@@ -301,25 +301,6 @@ def play_quiz(filepath_prefix, name):
             quiz_data = pd.read_csv(f"{q_a_filepath}")
             quiz_data_idx = quiz_data.set_index("QID")
 
-            try:
-                records = pd.read_csv(f"{records_filepath}")
-            except:
-                records = pd.DataFrame([{
-                    'answer_time'         : None,
-                    'name'                : None,
-                    'quiz_start_time'     : None,
-                    'subset_choice'       : None,
-                    'question_list_count' : None,
-                    'quiz_length'         : None,
-                    'topic'               : None,
-                    'question_no'         : None,
-                    'QID'                 : None,
-                    'question'            : None,
-                    'answer'              : None,
-                    'user_answer'         : None,
-                    'result'              : None,
-                }])
-
             #########################################################################
             # Give topic choice -- cut data accordingly -- create dicts/list/variable
             #########################################################################
