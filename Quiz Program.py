@@ -153,7 +153,7 @@ def initialise_files(folder):
          [34, "In which episode does Mark start work at Amigo's", 'The Affair', 'Series 6'],
          [35, 'In which episode do the flatmates have a party?', 'The Party', 'Series 6'],
          [36, 'In which episode does Sophie go into labour?', 'Das Boot', 'Series 6']],
-         columns = ["QID", "Question", "Answer", "Topic"]).to_csv(f"{folder}peep_show_q_a.csv",index=True)
+         columns = ["QID", "Question", "Answer", "Topic"]).to_csv(f"{folder}peep_show_q_a.csv",index=False)
 
         print(f"Initialised {folder}peep_show_q_a.csv")
         print()
@@ -372,11 +372,11 @@ def play_quiz(folder, name):
             scores_sql_df = ps.sqldf(f"""
 
                 SELECT
-                    "QID"
+                    quiz_data."QID"
 
                 FROM quiz_data
 
-                LEFT JOIN records
+                LEFT JOIN records ON quiz_data."QID" = records."QID"
 
             """)
 
