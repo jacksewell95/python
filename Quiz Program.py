@@ -342,7 +342,7 @@ def play_quiz(filepath_prefix, name):
 
             if name in records['name'].tolist():
 
-                exists = 1
+                name_records_exist = True
 
                 my_records = records[records["name"] == name]
 
@@ -363,7 +363,7 @@ def play_quiz(filepath_prefix, name):
                     globals()[f"all_my_last_{last_no}_incorrect_pass_records"] = records[records["result"].isin(["incorrect","pass"])]
 
             else:
-                exists = 0
+                name_records_exist = False
 
             x_values = []
             y_values = []
@@ -378,35 +378,25 @@ def play_quiz(filepath_prefix, name):
                 except:
                     last_result = "-"
 
-                if exists == 1:
-
-                    print('exists == 1')
-                    print()
+                if name_records_exist:
 
                     my_correct_records = all_my_last_10_correct_records[all_my_last_10_correct_records["QID"] == QID]
-                    my_correct_records_question = my_correct_records["QID"]
-                    correct = len(my_correct_records_question)
+                    correct = len(my_correct_records["QID"])
 
                     my_incorrect_pass_records = all_my_last_10_incorrect_pass_records[all_my_last_10_incorrect_pass_records["QID"] == QID]
-                    my_incorrect_pass_records_question = my_incorrect_pass_records["QID"]
-                    incorrect_pass = len(my_incorrect_pass_records_question)
+                    incorrect_pass = len(my_incorrect_pass_records["QID"])
 
                     total_asked = incorrect_pass + correct
 
                     my_recent_correct_records = all_my_recent_correct_records[all_my_recent_correct_records["QID"] == QID]
-                    my_recent_correct_records_question = my_recent_correct_records["QID"]
-                    recent_correct = len(my_recent_correct_records_question)
+                    recent_correct = len(my_recent_correct_records["QID"])
 
                     my_recent_incorrect_pass_records = all_my_recent_incorrect_pass_records[all_my_recent_incorrect_pass_records["QID"] == QID]
-                    my_recent_incorrect_pass_records_question = my_recent_incorrect_pass_records["QID"]
-                    recent_incorrect_pass = len(my_recent_incorrect_pass_records_question)
+                    recent_incorrect_pass = len(my_recent_incorrect_pass_records["QID"])
 
                     recent_total_asked = recent_incorrect_pass + recent_correct
 
                 else:
-
-                    print('exists == 0')
-                    print()
 
                     correct = 0
                     incorrect_pass = 0
