@@ -297,18 +297,17 @@ def play_quiz(filepath_prefix, name):
 
             ##############################################################################################
 
-            quiz_data = pd.read_csv(f"{q_a_filepath}")
-            quiz_data_idx = quiz_data.set_index("QID")
+            quiz_data = pd.read_csv(f"{q_a_filepath}").set_index("QID")
 
             topic_choice = topic_selection(q_a_filepath, "Select a topic (name/no.) or enter all:", "all")
 
             if topic_choice == "all":
-                quiz_data_cut = quiz_data_idx
+                quiz_data_cut = quiz_data
             else:
-                if quiz_data_idx["Topic"].dtypes == "int64":
-                    quiz_data_cut = quiz_data_idx[quiz_data_idx["Topic"] == int(topic_choice)]
+                if quiz_data["Topic"].dtypes == "int64":
+                    quiz_data_cut = quiz_data[quiz_data["Topic"] == int(topic_choice)]
                 else:
-                    quiz_data_cut = quiz_data_idx[quiz_data_idx["Topic"].str.lower() == topic_choice.lower()]
+                    quiz_data_cut = quiz_data[quiz_data["Topic"].str.lower() == topic_choice.lower()]
 
             quiz_data_question_dict = quiz_data_cut.to_dict()["Question"]
             quiz_data_answer_dict = quiz_data_cut.to_dict()["Answer"]
@@ -322,7 +321,7 @@ def play_quiz(filepath_prefix, name):
             #question_list = list(quiz_data_answer_dict.keys())
             question_list_count = len(question_list)
 
-            total_quiz_length = len(quiz_data.index.tolist())
+            total_quiz_length = quiz_data.shape[0]
 
         #     print(f'''
         #     How many questions would you like on {topic_choice}? (1-{question_list_count})''')
