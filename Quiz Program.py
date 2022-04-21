@@ -13,14 +13,14 @@ from IPython.display import display, HTML
 
 #review all while loops to see if they can be smaller (as with title and topic selections)
 
-def initialise_files(filepath_prefix):
+def initialise_files(folder):
 
-    if not os.path.exists(filepath_prefix):
-        os.makedirs(filepath_prefix)
-        print(f"Initialised {filepath_prefix}")
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+        print(f"Initialised {folder}")
         print()
 
-    if not os.path.exists(f"{filepath_prefix}quizzes.csv"):
+    if not os.path.exists(f"{folder}quizzes.csv"):
         pd.DataFrame([
             {
                 "quiz_title"       : 'Red Dwarf',
@@ -34,11 +34,11 @@ def initialise_files(filepath_prefix):
                 "q_a_filepath"     : 'peep_show_q_a',
                 "records_filepath" : 'peep_show_records'
             },
-        ]).to_csv(f"{filepath_prefix}quizzes.csv",index=False)
-        print(f"Initialised {filepath_prefix}quizzes.csv")
+        ]).to_csv(f"{folder}quizzes.csv",index=False)
+        print(f"Initialised {folder}quizzes.csv")
         print()
 
-    if not os.path.exists(f"{filepath_prefix}red_dwarf_q_a.csv"):
+    if not os.path.exists(f"{folder}red_dwarf_q_a.csv"):
         pd.DataFrame(
         [[1, 'In which episode does the crew originally get wiped out?', 'The End', 'Series I'],
          [2, 'In which episode does Lister see that there will be twin boys on Red Dwarf?', 'Future Echoes', 'Series I'],
@@ -110,12 +110,12 @@ def initialise_files(filepath_prefix):
          [68, 'In which episode do Rimmer and Kryten run for Machine President?', 'Mechocracy', 'Series XII'],
          [69, 'In which episode does Lister pay the price for capitalism?', 'M-Corp', 'Series XII'],
          [70, 'In which episode does Rimmer search for a better universe?', 'Skipper', 'Series XII']],
-         columns = ["QID", "Question", "Answer", "Topic"]).to_csv(f"{filepath_prefix}red_dwarf_q_a.csv",index=False)
+         columns = ["QID", "Question", "Answer", "Topic"]).to_csv(f"{folder}red_dwarf_q_a.csv",index=False)
 
-        print(f"Initialised {filepath_prefix}red_dwarf_q_a.csv")
+        print(f"Initialised {folder}red_dwarf_q_a.csv")
         pritn()
 
-    if not os.path.exists(f"{filepath_prefix}peep_show_q_a.csv"):
+    if not os.path.exists(f"{folder}peep_show_q_a.csv"):
         peep_show_q_a = pd.DataFrame(
         [[1, 'In which episode does Mark get bullied by children?', 'Warring Factions', 'Series 1'],
          [2, 'In which episode does Jeremy gurn at his JLB interview?', 'The Interview', 'Series 1'],
@@ -153,9 +153,9 @@ def initialise_files(filepath_prefix):
          [34, "In which episode does Mark start work at Amigo's", 'The Affair', 'Series 6'],
          [35, 'In which episode do the flatmates have a party?', 'The Party', 'Series 6'],
          [36, 'In which episode does Sophie go into labour?', 'Das Boot', 'Series 6']],
-         columns = ["QID", "Question", "Answer", "Topic"]).to_csv(f"{filepath_prefix}peep_show_q_a.csv",index=True)
+         columns = ["QID", "Question", "Answer", "Topic"]).to_csv(f"{folder}peep_show_q_a.csv",index=True)
 
-        print(f"Initialised {filepath_prefix}peep_show_q_a.csv")
+        print(f"Initialised {folder}peep_show_q_a.csv")
         print()
 
 def add_accents(word):
@@ -218,13 +218,13 @@ def topic_selection(q_a_filepath, sentence, exemption):
 
     return topic_choice
 
-def import_records(filepath_prefix, verb):
+def import_records(folder, verb):
 
     global q_a_filepath
     global q_a_filepath_suffix
     global records_filepath
 
-    quizzes = pd.read_csv(f"{filepath_prefix}quizzes.csv")
+    quizzes = pd.read_csv(f"{folder}quizzes.csv")
     quizzes_idx = quizzes.set_index("quiz_title")
     quiz_titles = quizzes["quiz_title"].to_list()
 
@@ -253,9 +253,9 @@ def import_records(filepath_prefix, verb):
     quizzes_records_dict = quizzes_cut_lower_idx.to_dict()["records_filepath"]
 
     q_a_filepath_suffix = quizzes_q_a_dict[quiz_choice_lower]
-    q_a_filepath = f"{filepath_prefix}{q_a_filepath_suffix}.csv"
+    q_a_filepath = f"{folder}{q_a_filepath_suffix}.csv"
     records_filepath_suffix = quizzes_records_dict[quiz_choice_lower]
-    records_filepath = f"{filepath_prefix}{records_filepath_suffix}.csv"
+    records_filepath = f"{folder}{records_filepath_suffix}.csv"
     #print(records_filepath)
 
     if os.path.exists(records_filepath):
@@ -279,12 +279,12 @@ def import_records(filepath_prefix, verb):
 
     return records, quizzes, quiz_choice_lower
 
-def play_quiz(filepath_prefix, name):
+def play_quiz(folder, name):
 
     global records
     global topic
 
-    records, quizzes, quiz_choice_lower = import_records(filepath_prefix, "play")
+    records, quizzes, quiz_choice_lower = import_records(folder, "play")
 
     play_loops = 0
     play_again = ""
@@ -601,7 +601,7 @@ def play_quiz(filepath_prefix, name):
     else:
         records.to_csv(f"{records_filepath}",index=False)
 
-def add_question(new_q_a_filepath, outer_function, records_filepath, filepath_prefix):
+def add_question(new_q_a_filepath, outer_function, records_filepath, folder):
 
     global quiz_data
     global topic_choice
@@ -645,7 +645,7 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, filepath_pr
                 '''))
             else:
                 new_topic = add_accents(topic_selection(
-                    f"{filepath_prefix}{new_q_a_filepath}.csv",
+                    f"{folder}{new_q_a_filepath}.csv",
                     "Topic (select from list or enter new):",
                     "new"))
 
@@ -657,7 +657,7 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, filepath_pr
             }]
 
             if questions_so_far > 0 or outer_function != "new":
-                quiz_data = pd.read_csv(f"{filepath_prefix}{new_q_a_filepath}.csv").to_dict(orient='records')
+                quiz_data = pd.read_csv(f"{folder}{new_q_a_filepath}.csv").to_dict(orient='records')
                 quiz_data.append(new_quiz_data)
             else:
                 quiz_data = new_quiz_data
@@ -667,7 +667,7 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, filepath_pr
             quiz_data = pd.DataFrame(quiz_data)
             quiz_data = quiz_data.set_index("QID")
 #             print("indexed on QID")
-            quiz_data.to_csv(f"{filepath_prefix}{new_q_a_filepath}.csv",index=True)
+            quiz_data.to_csv(f"{folder}{new_q_a_filepath}.csv",index=True)
 #             print("written to csv")
 
             questions_so_far = questions_so_far + 1
@@ -681,15 +681,15 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, filepath_pr
             {add_question_menu}
             ''').lower()
     else:
-        quiz_data.to_csv(f"{filepath_prefix}{new_q_a_filepath}.csv",index=True)
+        quiz_data.to_csv(f"{folder}{new_q_a_filepath}.csv",index=True)
 
-def create_quiz(filepath_prefix):
+def create_quiz(folder):
 
     new_quiz_title = add_accents(input(f'''
     What is the title of your new quiz?
     '''))
 
-    quizzes = pd.read_csv(f"{filepath_prefix}quizzes.csv").to_dict(orient='records')
+    quizzes = pd.read_csv(f"{folder}quizzes.csv").to_dict(orient='records')
 
     new_quiz_record = {
 
@@ -703,13 +703,13 @@ def create_quiz(filepath_prefix):
     quizzes.append(new_quiz_record)
 
     quizzes_df = pd.DataFrame(quizzes)
-    quizzes_df.to_csv(f"{filepath_prefix}quizzes.csv",index=False)
+    quizzes_df.to_csv(f"{folder}quizzes.csv",index=False)
 
     #####################################################################################
     # Ask for first question -- initialise questions data -- loop through extra questions
     #####################################################################################
 
-    add_question(new_q_a_filepath, "new", new_records_filepath, filepath_prefix)
+    add_question(new_q_a_filepath, "new", new_records_filepath, folder)
 
 def edit_question(q_a_filepath):
 
@@ -844,9 +844,9 @@ def remove_question(q_a_filepath):
 
     return quiz_data
 
-def edit_quiz(filepath_prefix):
+def edit_quiz(folder):
 
-    records, quizzes, quiz_choice_lower = import_records(filepath_prefix, "edit")
+    records, quizzes, quiz_choice_lower = import_records(folder, "edit")
 
     quiz_data = pd.read_csv(f"{q_a_filepath}")
     quiz_data = quiz_data.set_index("QID")
@@ -861,7 +861,7 @@ def edit_quiz(filepath_prefix):
 
     while edit_menu not in ["back","b"]:
         if edit_menu in ["add","a"]:
-            add_question(q_a_filepath_suffix, "edit", records_filepath, filepath_prefix)
+            add_question(q_a_filepath_suffix, "edit", records_filepath, folder)
             edit_menu = input(f'''
             {edit_menu_text}
             ''').lower()
@@ -889,9 +889,9 @@ def edit_quiz(filepath_prefix):
     else:
         pass
 
-def plot_records(filepath_prefix, name):
+def plot_records(folder, name):
 
-    records, quizzes, quiz_choice_lower = import_records(filepath_prefix, "view")
+    records, quizzes, quiz_choice_lower = import_records(folder, "view")
 
     if True:
         try:
@@ -960,9 +960,9 @@ def greeting():
     print(f'''
     Hello {name}!''')
 
-    filepath_prefix = "C:/Documents/Python Programs (csv)/"
+    folder = "C:/Documents/Python Programs (csv)/"
 
-    initialise_files(filepath_prefix)
+    initialise_files(folder)
 
     menu_text = "Would you like to play, view records, create new, or edit? (Enter exit to quit)"
 
@@ -972,22 +972,22 @@ def greeting():
 
     while menu not in ["exit","ex"]:
         if menu in ["play","p"]:
-            play_quiz(filepath_prefix, name)
+            play_quiz(folder, name)
             menu = input(f'''
             {menu_text}
             ''').lower()
         elif menu in ["view records","view","v"]:
-            plot_records(filepath_prefix, name)
+            plot_records(folder, name)
             menu = input(f'''
             {menu_text}
             ''').lower()
         elif menu in ["create new","create","c"]:
-            create_quiz(filepath_prefix)
+            create_quiz(folder)
             menu = input(f'''
             {menu_text}
             ''').lower()
         elif menu in ["edit","ed"]:
-            edit_quiz(filepath_prefix)
+            edit_quiz(folder)
             menu = input(f'''
             {menu_text}
             ''').lower()
