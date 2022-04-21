@@ -263,13 +263,12 @@ def import_records(filepath_prefix, verb):
     try:
         records = pd.read_csv(f"{records_filepath}")
     except:
-        if True:
-            try:
-                del records
-                #print("deleting other records")
-            except:
-                pass
-                #print("no records exist yet, doing nothing")
+        try:
+            del records
+            #print("deleting other records")
+        except:
+            pass
+            #print("no records exist yet, doing nothing")
     else:
         records = pd.read_csv(f"{records_filepath}")
         #print(records)
