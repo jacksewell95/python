@@ -295,7 +295,7 @@ def play_quiz(folder, name):
 
             ##############################################################################################
 
-            quiz_data = pd.read_csv(f"{q_a_filepath}").set_index("QID")
+            quiz_data = pd.read_csv(f"{q_a_filepath}")
 
             topic_choice = topic_selection(q_a_filepath, "Select a topic (name/no.) or enter all:", "all")
 
@@ -622,7 +622,6 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, folder):
     if outer_function == "edit":
         quiz_data = pd.read_csv(f"{q_a_filepath}")
 #         print(quiz_data)
-        quiz_data = quiz_data.set_index("QID")
 #         display(HTML(quiz_data.to_html()))
 
     questions_so_far = 0
@@ -678,9 +677,8 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, folder):
                 {quiz_data}''')
 
             quiz_data = pd.DataFrame(quiz_data)
-            quiz_data = quiz_data.set_index("QID")
 #             print("indexed on QID")
-            quiz_data.to_csv(f"{folder}{new_q_a_filepath}.csv",index=True)
+            quiz_data.to_csv(f"{folder}{new_q_a_filepath}.csv",index=False)
 #             print("written to csv")
 
             questions_so_far = questions_so_far + 1
@@ -694,7 +692,7 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, folder):
             {add_question_menu}
             ''').lower()
     else:
-        quiz_data.to_csv(f"{folder}{new_q_a_filepath}.csv",index=True)
+        quiz_data.to_csv(f"{folder}{new_q_a_filepath}.csv",index=False)
 
 def create_quiz(folder):
 
@@ -729,7 +727,6 @@ def edit_question(q_a_filepath):
     global quiz_data
 
     quiz_data = pd.read_csv(f"{q_a_filepath}")
-    quiz_data = quiz_data.set_index("QID")
 
     row_edit_menu = "Which row would you like to edit? (Enter QID)"
     field_edit_menu = "Would you like to modify the Question, Answer or Topic?"
@@ -809,7 +806,7 @@ def edit_question(q_a_filepath):
 
             display(HTML(row_to_edit.to_html()))
 
-            quiz_data.to_csv(f"{q_a_filepath}",index=True)
+            quiz_data.to_csv(f"{q_a_filepath}",index=False)
 
             row_modifications_made = row_modifications_made + 1
 
@@ -832,7 +829,7 @@ def edit_question(q_a_filepath):
 
 def remove_question(q_a_filepath):
 
-    quiz_data = pd.read_csv(f"{q_a_filepath}").set_index("QID")
+    quiz_data = pd.read_csv(f"{q_a_filepath}")
 
 #     display(HTML(quiz_data.to_html()))
 
@@ -843,7 +840,7 @@ def remove_question(q_a_filepath):
     while True:
         try:
             quiz_data = quiz_data[quiz_data.index != int(index_to_remove)]
-            quiz_data.to_csv(f"{q_a_filepath}",index=True)
+            quiz_data.to_csv(f"{q_a_filepath}",index=False)
             display(HTML(quiz_data.to_html()))
             print(f'''
             {index_to_remove} removed''')
@@ -862,7 +859,6 @@ def edit_quiz(folder):
     records, quizzes, quiz_choice_lower = import_records(folder, "edit")
 
     quiz_data = pd.read_csv(f"{q_a_filepath}")
-    quiz_data = quiz_data.set_index("QID")
 
     display(HTML(quiz_data.to_html()))
 
