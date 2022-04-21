@@ -405,7 +405,7 @@ def play_quiz(filepath_prefix, name):
 
                 else:
 
-                    print('exists == 10')
+                    print('exists == 0')
                     print()
 
                     correct = 0
