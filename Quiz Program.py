@@ -15,10 +15,10 @@ from IPython.display import display, HTML
 
 def initialise_files(filepath_prefix):
 
-    if not os.path.exists(f"{filepath_prefix}"):
-        os.makedirs(f"{filepath_prefix}")
-        print(f'''
-        Initialised {filepath_prefix}''')
+    if not os.path.exists(filepath_prefix):
+        os.makedirs(filepath_prefix)
+        print(f"Initialised {filepath_prefix}")
+        print()
 
     if not os.path.exists(f"{filepath_prefix}quizzes.csv"):
         pd.DataFrame([
@@ -35,8 +35,8 @@ def initialise_files(filepath_prefix):
                 "records_filepath" : 'peep_show_records'
             },
         ]).to_csv(f"{filepath_prefix}quizzes.csv",index=False)
-        print(f'''
-        Initialised {filepath_prefix}quizzes.csv''')
+        print(f"Initialised {filepath_prefix}quizzes.csv")
+        print()
 
     if not os.path.exists(f"{filepath_prefix}red_dwarf_q_a.csv"):
         red_dwarf_q_a = pd.DataFrame(
@@ -113,8 +113,8 @@ def initialise_files(filepath_prefix):
                 columns = ["QID", "Question", "Answer", "Topic"])
         red_dwarf_q_a.set_index("QID")
         red_dwarf_q_a.to_csv(f"{filepath_prefix}red_dwarf_q_a.csv",index=True)
-        print(f'''
-        Initialised {filepath_prefix}red_dwarf_q_a.csv''')
+        print(f"Initialised {filepath_prefix}red_dwarf_q_a.csv")
+        pritn()
 
     if not os.path.exists(f"{filepath_prefix}peep_show_q_a.csv"):
         peep_show_q_a = pd.DataFrame(
@@ -157,8 +157,8 @@ def initialise_files(filepath_prefix):
                 columns = ["QID", "Question", "Answer", "Topic"])
         peep_show_q_a.set_index("QID")
         peep_show_q_a.to_csv(f"{filepath_prefix}peep_show_q_a.csv",index=True)
-        print(f'''
-        Initialised {filepath_prefix}peep_show_q_a.csv''')
+        print(f"Initialised {filepath_prefix}peep_show_q_a.csv")
+        print()
 
 def add_accents(word):
 
