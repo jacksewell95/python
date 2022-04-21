@@ -302,20 +302,19 @@ def play_quiz(filepath_prefix, name):
             topic_choice = topic_selection(q_a_filepath, "Select a topic (name/no.) or enter all:", "all")
 
             if topic_choice == "all":
-                quiz_data_cut = quiz_data
+                quiz_data = quiz_data
+            elif quiz_data["Topic"].dtypes == "int64":
+                quiz_data = quiz_data[quiz_data["Topic"] == int(topic_choice)]
             else:
-                if quiz_data["Topic"].dtypes == "int64":
-                    quiz_data_cut = quiz_data[quiz_data["Topic"] == int(topic_choice)]
-                else:
-                    quiz_data_cut = quiz_data[quiz_data["Topic"].str.lower() == topic_choice.lower()]
+                quiz_data = quiz_data[quiz_data["Topic"].str.lower() == topic_choice.lower()]
 
-            quiz_data_question_dict = quiz_data_cut.to_dict()["Question"]
-            quiz_data_answer_dict = quiz_data_cut.to_dict()["Answer"]
-            quiz_data_topic_dict = quiz_data_cut.to_dict()["Topic"]
+            quiz_data_question_dict = quiz_data.to_dict()["Question"]
+            quiz_data_answer_dict = quiz_data.to_dict()["Answer"]
+            quiz_data_topic_dict = quiz_data.to_dict()["Topic"]
 
-        #     display(HTML(quiz_data_cut.to_html()))
+        #     display(HTML(quiz_data.to_html()))
 
-            question_list = quiz_data_cut.index.tolist()
+            question_list = quiz_data.index.tolist()
         #     question_list = quiz_data.index.to_list()
 
             #question_list = list(quiz_data_answer_dict.keys())
