@@ -367,6 +367,19 @@ def play_quiz(folder, name):
             y_values = []
             scores = []
 
+            import pandasql as ps
+
+            scores_sql_df = ps.sqldf(f"""
+
+                SELECT
+                    "QID"
+
+                FROM quiz_data
+
+                LEFT JOIN records
+
+            """)
+
             for QID in question_list:
 
                 question = quiz_data_question_dict[QID]
