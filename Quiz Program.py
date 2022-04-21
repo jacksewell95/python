@@ -355,12 +355,12 @@ def play_quiz(filepath_prefix, name):
                 all_my_recent_incorrect_pass_records = all_my_recent_records[all_my_recent_records["result"].isin(["incorrect","pass"])]
 
                 for last_no in (1,10):
-                    records = pd.concat([my_records[my_records["QID"] == QID].tail(10) for QID in question_list])
-                    locals()[f"all_my_last_{last_no}_records"] = records
-                    correct_records = records[records["result"] == "correct"]
-                    locals()[f"all_my_last_{last_no}_correct_records"] = correct_records
-                    incorrect_pass_records = all_my_last_10_records[all_my_last_10_records["result"].isin(["incorrect","pass"])]
-                    locals()[f"all_my_last_{last_no}_incorrect_pass_records"] = incorrect_pass_records
+
+                    records = pd.concat([my_records[my_records["QID"] == QID].tail(last_no) for QID in question_list])
+
+                    globals()[f"all_my_last_{last_no}_records"] = records
+                    globals()[f"all_my_last_{last_no}_correct_records"] = records[records["result"] == "correct"]
+                    globals()[f"all_my_last_{last_no}_incorrect_pass_records"] = records[records["result"].isin(["incorrect","pass"])]
 
             else:
                 exists = 0
