@@ -260,21 +260,24 @@ def import_records(filepath_prefix, verb):
     records_filepath = f"{filepath_prefix}{records_filepath_suffix}.csv"
     #print(records_filepath)
 
-    try:
-        records = pd.read_csv(f"{records_filepath}")
-    except:
-        try:
-            del records
-            #print("deleting other records")
-        except:
-            pass
-            #print("no records exist yet, doing nothing")
+    if os.path.exists(records_filepath):
+        records = pd.read_csv(records_filepath)
     else:
-        records = pd.read_csv(f"{records_filepath}")
-        #print(records)
-        #print("reading in old records")
-
-    #print(records)
+        records = pd.DataFrame([{
+            'answer_time'         : None,
+            'name'                : None,
+            'quiz_start_time'     : None,
+            'subset_choice'       : None,
+            'question_list_count' : None,
+            'quiz_length'         : None,
+            'topic'               : None,
+            'question_no'         : None,
+            'QID'                 : None,
+            'question'            : None,
+            'answer'              : None,
+            'user_answer'         : None,
+            'result'              : None,
+        }])
 
     return records, quizzes, quiz_choice_lower
 
