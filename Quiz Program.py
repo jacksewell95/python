@@ -340,7 +340,10 @@ def play_quiz(filepath_prefix, name):
             passes = 0
             incorrect = 0
 
-            try:
+            if name in records['name'].tolist():
+
+                exists = 1
+
                 my_records = records[records["name"] == name]
 
                 all_my_correct_records = my_records[my_records["result"] == "correct"]
@@ -359,10 +362,7 @@ def play_quiz(filepath_prefix, name):
                     incorrect_pass_records = all_my_last_10_records[all_my_last_10_records["result"].isin(["incorrect","pass"])]
                     locals()[f"all_my_last_{last_no}_incorrect_pass_records"] = incorrect_pass_records
 
-#                 display(HTML(all_my_last_10_records.to_html()))
-
-                exists = 1
-            except:
+            else:
                 exists = 0
 
             x_values = []
