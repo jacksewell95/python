@@ -301,12 +301,8 @@ def play_quiz(filepath_prefix, name):
 
             topic_choice = topic_selection(q_a_filepath, "Select a topic (name/no.) or enter all:", "all")
 
-            if topic_choice == "all":
-                quiz_data = quiz_data
-            elif quiz_data["Topic"].dtypes == "int64":
-                quiz_data = quiz_data[quiz_data["Topic"] == int(topic_choice)]
-            else:
-                quiz_data = quiz_data[quiz_data["Topic"].str.lower() == topic_choice.lower()]
+            if topic_choice != 'all':
+                quiz_data = quiz_data[quiz_data["Topic"].str.lower() == str(topic_choice).lower()]
 
             quiz_data_question_dict = quiz_data.to_dict()["Question"]
             quiz_data_answer_dict = quiz_data.to_dict()["Answer"]
