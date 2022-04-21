@@ -300,13 +300,7 @@ def play_quiz(filepath_prefix, name):
             quiz_data = pd.read_csv(f"{q_a_filepath}")
             quiz_data_idx = quiz_data.set_index("QID")
 
-            #########################################################################
-            # Give topic choice -- cut data accordingly -- create dicts/list/variable
-            #########################################################################
-
             topic_choice = topic_selection(q_a_filepath, "Select a topic (name/no.) or enter all:", "all")
-
-        #     print(topic_choice)
 
             if topic_choice == "all":
                 quiz_data_cut = quiz_data_idx
@@ -329,10 +323,6 @@ def play_quiz(filepath_prefix, name):
             question_list_count = len(question_list)
 
             total_quiz_length = len(quiz_data.index.tolist())
-
-            ############################################################################
-            # Offer validated quiz length -- define quiz start time -- initialise scores
-            ############################################################################
 
         #     print(f'''
         #     How many questions would you like on {topic_choice}? (1-{question_list_count})''')
@@ -362,10 +352,6 @@ def play_quiz(filepath_prefix, name):
             score = 0
             passes = 0
             incorrect = 0
-
-            ######################################################################
-            # Import records for name, calculate ask_chances and production final_question_list
-            ######################################################################
 
             try:
                 my_records = records[records["name"] == name]
