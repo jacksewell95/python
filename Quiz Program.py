@@ -289,7 +289,6 @@ def play_quiz(filepath_prefix, name):
     records, quizzes, quiz_choice_lower = import_records(filepath_prefix, "play")
 
     play_loops = 0
-
     play_again = ""
 
     while play_again not in ["no","n"]:
@@ -358,8 +357,7 @@ def play_quiz(filepath_prefix, name):
                     Excellent! Running {quiz_length} questions''')
                     break
 
-            now = datetime.datetime.now()
-            quiz_start_time = now.strftime("%d-%m-%Y %H.%M.%S")
+            quiz_start_time = datetime.datetime.now().strftime("%d-%m-%Y %H.%M.%S")
 
             score = 0
             passes = 0
