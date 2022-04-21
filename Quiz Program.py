@@ -225,7 +225,6 @@ def import_records(filepath_prefix, verb):
     global q_a_filepath
     global q_a_filepath_suffix
     global records_filepath
-    global records
 
     quizzes = pd.read_csv(f"{filepath_prefix}quizzes.csv")
     quizzes_idx = quizzes.set_index("quiz_title")
@@ -278,14 +277,14 @@ def import_records(filepath_prefix, verb):
 
     #print(records)
 
-    return quizzes, quiz_choice_lower
+    return records, quizzes, quiz_choice_lower
 
 def play_quiz(filepath_prefix, name):
 
     global records
     global topic
 
-    quizzes, quiz_choice_lower = import_records(filepath_prefix, "play")
+    records, quizzes, quiz_choice_lower = import_records(filepath_prefix, "play")
 
     play_loops = 0
 
@@ -896,7 +895,7 @@ def remove_question(q_a_filepath):
 
 def edit_quiz(filepath_prefix):
 
-    quizzes, quiz_choice_lower = import_records(filepath_prefix, "edit")
+    records, quizzes, quiz_choice_lower = import_records(filepath_prefix, "edit")
 
     quiz_data = pd.read_csv(f"{q_a_filepath}")
     quiz_data = quiz_data.set_index("QID")
@@ -941,7 +940,7 @@ def edit_quiz(filepath_prefix):
 
 def plot_records(filepath_prefix, name):
 
-    quizzes, quiz_choice_lower = import_records(filepath_prefix, "view")
+    records, quizzes, quiz_choice_lower = import_records(filepath_prefix, "view")
 
     if True:
         try:
