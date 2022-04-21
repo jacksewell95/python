@@ -39,7 +39,7 @@ def initialise_files(filepath_prefix):
         print()
 
     if not os.path.exists(f"{filepath_prefix}red_dwarf_q_a.csv"):
-        red_dwarf_q_a = pd.DataFrame(
+        pd.DataFrame(
         [[1, 'In which episode does the crew originally get wiped out?', 'The End', 'Series I'],
          [2, 'In which episode does Lister see that there will be twin boys on Red Dwarf?', 'Future Echoes', 'Series I'],
          [3, 'In which episode does Lister attempt to become a catering officer?', 'Balance of Power', 'Series I'],
@@ -110,9 +110,8 @@ def initialise_files(filepath_prefix):
          [68, 'In which episode do Rimmer and Kryten run for Machine President?', 'Mechocracy', 'Series XII'],
          [69, 'In which episode does Lister pay the price for capitalism?', 'M-Corp', 'Series XII'],
          [70, 'In which episode does Rimmer search for a better universe?', 'Skipper', 'Series XII']],
-                columns = ["QID", "Question", "Answer", "Topic"])
-        red_dwarf_q_a.set_index("QID")
-        red_dwarf_q_a.to_csv(f"{filepath_prefix}red_dwarf_q_a.csv",index=True)
+         columns = ["QID", "Question", "Answer", "Topic"]).to_csv(f"{filepath_prefix}red_dwarf_q_a.csv",index=False)
+
         print(f"Initialised {filepath_prefix}red_dwarf_q_a.csv")
         pritn()
 
@@ -154,9 +153,8 @@ def initialise_files(filepath_prefix):
          [34, "In which episode does Mark start work at Amigo's", 'The Affair', 'Series 6'],
          [35, 'In which episode do the flatmates have a party?', 'The Party', 'Series 6'],
          [36, 'In which episode does Sophie go into labour?', 'Das Boot', 'Series 6']],
-                columns = ["QID", "Question", "Answer", "Topic"])
-        peep_show_q_a.set_index("QID")
-        peep_show_q_a.to_csv(f"{filepath_prefix}peep_show_q_a.csv",index=True)
+         columns = ["QID", "Question", "Answer", "Topic"]).to_csv(f"{filepath_prefix}peep_show_q_a.csv",index=True)
+
         print(f"Initialised {filepath_prefix}peep_show_q_a.csv")
         print()
 
