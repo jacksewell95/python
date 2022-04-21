@@ -308,15 +308,8 @@ def play_quiz(filepath_prefix, name):
             quiz_data_answer_dict = quiz_data.to_dict()["Answer"]
             quiz_data_topic_dict = quiz_data.to_dict()["Topic"]
 
-        #     display(HTML(quiz_data.to_html()))
-
             question_list = quiz_data.index.tolist()
-        #     question_list = quiz_data.index.to_list()
-
-            #question_list = list(quiz_data_answer_dict.keys())
-            question_list_count = len(question_list)
-
-            total_quiz_length = quiz_data.shape[0]
+            question_list_count = quiz_data.shape[0]
 
         #     print(f'''
         #     How many questions would you like on {topic_choice}? (1-{question_list_count})''')
@@ -350,7 +343,7 @@ def play_quiz(filepath_prefix, name):
             try:
                 my_records = records[records["name"] == name]
 
-                all_my_recent_records = my_records.tail(total_quiz_length)
+                all_my_recent_records = my_records.tail(question_list_count)
 
                 all_my_correct_records = my_records[my_records["result"] == "correct"]
                 all_my_incorrect_pass_records = my_records[my_records["result"].isin(["incorrect","pass"])]
