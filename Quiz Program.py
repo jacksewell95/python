@@ -343,10 +343,10 @@ def play_quiz(filepath_prefix, name):
             try:
                 my_records = records[records["name"] == name]
 
-                all_my_recent_records = my_records.tail(question_list_count)
-
                 all_my_correct_records = my_records[my_records["result"] == "correct"]
                 all_my_incorrect_pass_records = my_records[my_records["result"].isin(["incorrect","pass"])]
+
+                all_my_recent_records = my_records.tail(question_list_count)
 
                 all_my_recent_correct_records = all_my_recent_records[all_my_recent_records["result"] == "correct"]
                 all_my_recent_incorrect_pass_records = all_my_recent_records[all_my_recent_records["result"].isin(["incorrect","pass"])]
@@ -380,6 +380,9 @@ def play_quiz(filepath_prefix, name):
 
                 if exists == 1:
 
+                    print('exists == 1')
+                    print()
+
                     my_correct_records = all_my_last_10_correct_records[all_my_last_10_correct_records["QID"] == QID]
                     my_correct_records_question = my_correct_records["QID"]
                     correct = len(my_correct_records_question)
@@ -399,7 +402,12 @@ def play_quiz(filepath_prefix, name):
                     recent_incorrect_pass = len(my_recent_incorrect_pass_records_question)
 
                     recent_total_asked = recent_incorrect_pass + recent_correct
+
                 else:
+
+                    print('exists == 10')
+                    print()
+
                     correct = 0
                     incorrect_pass = 0
                     total_asked = 0
@@ -458,6 +466,7 @@ def play_quiz(filepath_prefix, name):
         #         print(scores)
 
             scores_df = pd.DataFrame(scores)
+            scores_df.to_csv('C:/Documents/Python Programs (csv)/scores.csv',index=False)
             scores_df = scores_df.set_index("QID")
             display(HTML(scores_df.to_html()))
 
