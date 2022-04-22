@@ -982,30 +982,18 @@ def greeting():
     while menu not in ["exit","ex"]:
         if menu in ["play","p"]:
             play_quiz(folder, name)
-            menu = input(f'''
-            {menu_text}
-            ''').lower()
         elif menu in ["view records","view","v"]:
             plot_records(folder, name)
-            menu = input(f'''
-            {menu_text}
-            ''').lower()
         elif menu in ["create new","create","c"]:
             create_quiz(folder)
-            menu = input(f'''
-            {menu_text}
-            ''').lower()
         elif menu in ["edit","ed"]:
             edit_quiz(folder)
-            menu = input(f'''
-            {menu_text}
-            ''').lower()
         else:
             print(f'''
             Sorry, I didn't understand that''')
-            menu = input(f'''
-            {menu_text}
-            ''').lower()
+        menu = input(f'''
+        {menu_text}
+        ''').lower()
     else:
         pass
 
