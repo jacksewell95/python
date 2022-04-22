@@ -975,9 +975,7 @@ def greeting():
 
     menu_text = "Would you like to play, view records, create new, or edit? (Enter exit to quit)"
 
-    menu = input(f'''
-    {menu_text}
-    ''').lower()
+    menu = None
 
     while menu not in ["exit","ex"]:
 
@@ -989,7 +987,7 @@ def greeting():
             create_quiz(folder)
         elif menu in ["edit","ed"]:
             edit_quiz(folder)
-        else:
+        elif menu is not None:
             print(f'''
             Sorry, I didn't understand that''')
 
