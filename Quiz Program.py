@@ -962,18 +962,16 @@ def plot_records(folder, name):
 
 def greeting():
 
+    folder = "C:/Documents/Python Programs (csv)/"
+
+    initialise_files(folder)
+
     name = add_accents(input('''
     Hi! What's your name?
     ''')).title()
 
     print(f'''
     Hello {name}!''')
-
-    folder = "C:/Documents/Python Programs (csv)/"
-
-    initialise_files(folder)
-
-    menu_text = "Would you like to play, view records, create new, or edit? (Enter exit to quit)"
 
     menu = None
 
@@ -992,7 +990,7 @@ def greeting():
             Sorry, I didn't understand that''')
 
         menu = input(f'''
-        {menu_text}
+        "Would you like to play, view records, create new, or edit? (Enter exit to quit)"
         ''').lower()
 
 greeting()
