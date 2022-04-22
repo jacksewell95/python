@@ -980,6 +980,7 @@ def greeting():
     ''').lower()
 
     while menu not in ["exit","ex"]:
+
         if menu in ["play","p"]:
             play_quiz(folder, name)
         elif menu in ["view records","view","v"]:
@@ -991,10 +992,9 @@ def greeting():
         else:
             print(f'''
             Sorry, I didn't understand that''')
+
         menu = input(f'''
         {menu_text}
         ''').lower()
-    else:
-        pass
 
 greeting()
