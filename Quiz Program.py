@@ -862,41 +862,26 @@ def edit_quiz(folder):
 
     display(HTML(quiz_data.to_html()))
 
-    edit_menu_text = "Would you like to add, edit, or remove questions? (Enter back to return)"
-
-    edit_menu = input(f'''
-    {edit_menu_text}
-    ''').lower()
+    edit_menu = None
 
     while edit_menu not in ["back","b"]:
+
         if edit_menu in ["add","a"]:
             add_question(q_a_filepath_suffix, "edit", records_filepath, folder)
-            edit_menu = input(f'''
-            {edit_menu_text}
-            ''').lower()
         elif edit_menu in ["edit","ed","e"]:
             edit_question(q_a_filepath)
-            edit_menu = input(f'''
-            {edit_menu_text}
-            ''').lower()
         elif edit_menu in ["remove","r"]:
             quiz_data = remove_question(q_a_filepath)
-            edit_menu = input(f'''
-            {edit_menu_text}
-            ''').lower()
+        elif edit_menu is not None:
+            print(f'''
+            Sorry, I didn't understand that''')
 #         elif edit_menu == "view":
 #             quiz_data = pd.read_csv(f"{q_a_filepath}")
 #             display(HTML(quiz_data.to_html()))
-#             edit_menu = input(f'''
-#             {edit_menu_text}
-#             ''').lower()
-        else:
-            edit_menu = input(f'''
-            Sorry, I didn't understand that
-            {edit_menu_text}
-            ''').lower()
-    else:
-        pass
+
+        edit_menu = input(f'''
+        "Would you like to add, edit, or remove questions? (Enter back to return)"
+        ''').lower()
 
 def plot_records(folder, name):
 
