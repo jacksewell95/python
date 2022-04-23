@@ -230,13 +230,23 @@ def import_records(folder, verb):
     quiz_titles = quizzes["quiz_title"].to_list()
 
     quiz_titles_series = pd.DataFrame(quiz_titles, columns=["Quizzes"])
+    quiz_titles_lower = list(quizzes["quiz_title_lower"])
+
+    # JS 23.04.22 reading the q_a files in the directory could be used to create quizzes (df)
+    # This would need to include:
+    #   1. quiz_title - q_a_filepath.replace('_q_a',''): 'Red Dwarf'
+    #   q_a files (e.g. red_dwarf_q_a) should be remade in capital case (e.g. Red Dwarf_q_a)
+    #   2. quiz_title_lower - quiz_title.replace(' ','_').lower(): 'red_dwarf'
+    #   3. q_a_filepath - taken straight from q_a file: 'Red Dwarf_q_a'
+    #   4. records_filepath - q_a_filepath.replace('_q_a','_records'): 'Red Dwarf_records'
+
     display(HTML(quiz_titles_series.to_html()))
 
     quiz_choice_lower = input(f'''
     Which quiz would you like to {verb}? (Enter name)
     ''').lower()
 
-    while quiz_choice_lower not in list(quizzes["quiz_title_lower"]):
+    while quiz_choice_lower not in quiz_titles_lower:
 
         quiz_choice_lower = input(f'''
         Sorry, that quiz is not available
@@ -656,10 +666,10 @@ def create_quiz(folder):
 
     new_quiz_record = {
 
-        'new_quiz_title'       : new_quiz_title,
-        'new_quiz_title_lower' : new_quiz_title.lower(),
-        'new_q_a_filepath'     : f"{new_quiz_title.lower().replace(' ', '_')}_q_a",
-        'new_records_filepath' : f"{new_quiz_title.lower().replace(' ', '_')}_records",
+        'quiz_title'       : new_quiz_title,
+        'quiz_title_lower' : new_quiz_title.lower(),
+        'q_a_filepath'     : f"{new_quiz_title.lower().replace(' ', '_')}_q_a",
+        'records_filepath' : f"{new_quiz_title.lower().replace(' ', '_')}_records",
 
     }
 
