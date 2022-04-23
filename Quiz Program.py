@@ -236,7 +236,7 @@ def import_records(folder, verb):
     # This would need to include:
     #   1. quiz_title - q_a_filepath.replace('_q_a',''): 'Red Dwarf'
     #   q_a files (e.g. red_dwarf_q_a) should be remade in capital case (e.g. Red Dwarf_q_a)
-    #   2. quiz_title_lower - quiz_title.replace(' ','_').lower(): 'red_dwarf'
+    #   2. quiz_title_lower - quiz_title.lower(): 'red dwarf'
     #   3. q_a_filepath - taken straight from q_a file: 'Red Dwarf_q_a'
     #   4. records_filepath - q_a_filepath.replace('_q_a','_records'): 'Red Dwarf_records'
 
