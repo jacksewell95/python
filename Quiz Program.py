@@ -623,18 +623,18 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, folder):
                     "Topic (select from list or enter new):",
                     "new"))
 
-            new_quiz_data = [{
+            new_quiz_data = {
                 'QID'      : new_QID,
                 'Question' : new_question,
                 'Answer'   : new_answer,
                 'Topic'    : new_topic,
-            }]
+            }
 
             if questions_so_far > 0 or outer_function != "new":
                 quiz_data = pd.read_csv(f"{folder}{new_q_a_filepath}.csv").to_dict(orient='records')
                 quiz_data.append(new_quiz_data)
             else:
-                quiz_data = new_quiz_data
+                quiz_data = [new_quiz_data]
                 print(f'''created DF
                 {quiz_data}''')
 
@@ -766,7 +766,7 @@ def edit_question(q_a_filepath):
 
             quiz_data.to_csv(f"{q_a_filepath}",index=False)
 
-            row_modifications_made = row_modifications_made + 1
+            row_modifications_made += 1
 
             another_row_modification_lower = input(f'''
             {another_edit_menu}
