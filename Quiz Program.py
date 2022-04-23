@@ -387,38 +387,44 @@ def play_quiz(folder, name):
 
                     FROM counts
 
+                ),
+
+                ask_chances AS (
+
+                    SELECT
+                        *,
+
+                        CASE WHEN total_asked = 0
+                             THEN 1000000
+                             WHEN last_result IN ('incorrect','pass')
+                             THEN 100000
+                             WHEN total_asked < 3 OR recent_total_asked = 0
+                             THEN 0.05 * (incorrect_pass_rate * incorrect_pass_rate) + 50
+                             WHEN total_asked >= 3 AND incorrect_pass_rate > 0 AND recent_total_asked > 0
+                             THEN 0.05 * (incorrect_pass_rate * incorrect_pass_rate) + 10
+                             WHEN total_asked >= 3 AND incorrect_pass_rate = 0 AND recent_total_asked > 0
+                             THEN 10
+                             ELSE 10
+                             END AS ask_chances
+
+                    FROM rates
+
                 )
 
                 SELECT
                     *,
+                    ask_chances / SUM(ask_chances) OVER () AS ask_chances_pct
 
-                    CASE WHEN total_asked = 0
-                         THEN 1000000
-                         WHEN last_result IN ('incorrect','pass')
-                         THEN 100000
-                         WHEN total_asked < 3 OR recent_total_asked = 0
-                         THEN 0.05 * (incorrect_pass_rate * incorrect_pass_rate) + 50
-                         WHEN total_asked >= 3 AND incorrect_pass_rate > 0 AND recent_total_asked > 0
-                         THEN 0.05 * (incorrect_pass_rate * incorrect_pass_rate) + 10
-                         WHEN total_asked >= 3 AND incorrect_pass_rate = 0 AND recent_total_asked > 0
-                         THEN 10
-                         ELSE 10
-                         END AS ask_chances
-
-                FROM rates
+                FROM ask_chances
 
             """)
 
             scores_df.to_csv('C:/Documents/Python Programs (csv)/scores.csv', index=False)
 
-            ask_chances_list = scores_df["ask_chances"].tolist()
-            sum_ask_chances = sum(ask_chances_list)
-            ask_chances_list = [i/sum_ask_chances for i in ask_chances_list]
-
-            final_question_list = choice(question_list, quiz_length, p=ask_chances_list, replace=False)
-            final_question_list = list(final_question_list)
-
-#             print(final_question_list)
+            final_question_list = list(choice(scores_df['QID'],
+                                              quiz_length,
+                                              p = scores_df['ask_chances_pct'],
+                                              replace = False))
 
             #########################################################################################################
             # loop through asking and marking each question
