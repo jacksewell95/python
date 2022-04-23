@@ -410,8 +410,6 @@ def play_quiz(folder, name):
             """)
 
             scores_df.to_csv('C:/Documents/Python Programs (csv)/scores.csv', index=False)
-            scores_df = scores_df.set_index("QID")
-            display(HTML(scores_df.to_html()))
 
             ask_chances_list = scores_df["ask_chances"].tolist()
             sum_ask_chances = sum(ask_chances_list)
