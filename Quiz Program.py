@@ -280,6 +280,97 @@ def import_records(folder, verb):
 
     return records, quizzes, quiz_choice_lower
 
+def get_final_question_list(quiz_data, records, name, quiz_length):
+
+    records = records[records["name"] == name]
+
+    last_records = pd.concat([records[records["QID"] == QID].tail(1) for QID in quiz_data['QID']])
+    recent_records = pd.concat([records[records["QID"] == QID].tail(10) for QID in quiz_data['QID']])
+
+    scores = ps.sqldf(f"""
+
+        WITH counts AS (
+
+            SELECT
+                quiz_data."QID",
+                quiz_data."Question",
+                quiz_data."Answer",
+                quiz_data."Topic",
+
+                records.name,
+                last_records.result AS last_result,
+
+                COUNT(CASE WHEN recent_records.result IN ('incorrect','pass') THEN 1 ELSE NULL END) AS recent_incorrect_pass,
+                COUNT(CASE WHEN recent_records.result = 'correct' THEN 1 ELSE NULL END) AS recent_correct,
+                COUNT(*) AS recent_total_asked,
+
+                COUNT(CASE WHEN records.result IN ('incorrect','pass') THEN 1 ELSE NULL END) AS incorrect_pass,
+                COUNT(CASE WHEN records.result = 'correct' THEN 1 ELSE NULL END) AS correct,
+                COUNT(*) AS total_asked
+
+            FROM quiz_data
+
+            LEFT JOIN records ON quiz_data."QID" = records."QID"
+            LEFT JOIN recent_records ON quiz_data."QID" = recent_records."QID"
+            LEFT JOIN last_records ON quiz_data."QID" = last_records."QID"
+
+            GROUP BY 1,2,3,4,5,6
+
+            ORDER BY 1 ASC
+
+        ),
+
+        rates AS (
+
+            SELECT
+                *,
+
+                recent_incorrect_pass / recent_total_asked AS recent_incorrect_pass_rate,
+                incorrect_pass / total_asked AS incorrect_pass_rate
+
+            FROM counts
+
+        ),
+
+        ask_chances AS (
+
+            SELECT
+                *,
+
+                CASE WHEN total_asked = 0
+                     THEN 1000000
+                     WHEN last_result IN ('incorrect','pass')
+                     THEN 100000
+                     WHEN total_asked < 3 OR recent_total_asked = 0
+                     THEN 0.05 * (incorrect_pass_rate * incorrect_pass_rate) + 50
+                     WHEN total_asked >= 3 AND incorrect_pass_rate > 0 AND recent_total_asked > 0
+                     THEN 0.05 * (incorrect_pass_rate * incorrect_pass_rate) + 10
+                     WHEN total_asked >= 3 AND incorrect_pass_rate = 0 AND recent_total_asked > 0
+                     THEN 10
+                     ELSE 10
+                     END AS ask_chances
+
+            FROM rates
+
+        )
+
+        SELECT
+            *,
+            ask_chances / SUM(ask_chances) OVER () AS ask_chances_pct
+
+        FROM ask_chances
+
+    """)
+
+    scores.to_csv('C:/Documents/Python Programs (csv)/scores.csv', index=False)
+
+    final_question_list = list(choice(scores['QID'],
+                                      quiz_length,
+                                      p = scores['ask_chances_pct'],
+                                      replace = False))
+
+    return final_question_list
+
 def play_quiz(folder, name):
 
     global records
@@ -339,92 +430,7 @@ def play_quiz(folder, name):
             passes = 0
             incorrect = 0
 
-            records = records[records["name"] == name]
-
-            last_records = pd.concat([records[records["QID"] == QID].tail(1) for QID in question_list])
-            recent_records = pd.concat([records[records["QID"] == QID].tail(10) for QID in question_list])
-
-            scores_df = ps.sqldf(f"""
-
-                WITH counts AS (
-
-                    SELECT
-                        quiz_data."QID",
-                        quiz_data."Question",
-                        quiz_data."Answer",
-                        quiz_data."Topic",
-
-                        records.name,
-                        last_records.result AS last_result,
-
-                        COUNT(CASE WHEN recent_records.result IN ('incorrect','pass') THEN 1 ELSE NULL END) AS recent_incorrect_pass,
-                        COUNT(CASE WHEN recent_records.result = 'correct' THEN 1 ELSE NULL END) AS recent_correct,
-                        COUNT(*) AS recent_total_asked,
-
-                        COUNT(CASE WHEN records.result IN ('incorrect','pass') THEN 1 ELSE NULL END) AS incorrect_pass,
-                        COUNT(CASE WHEN records.result = 'correct' THEN 1 ELSE NULL END) AS correct,
-                        COUNT(*) AS total_asked
-
-                    FROM quiz_data
-
-                    LEFT JOIN records ON quiz_data."QID" = records."QID"
-                    LEFT JOIN recent_records ON quiz_data."QID" = recent_records."QID"
-                    LEFT JOIN last_records ON quiz_data."QID" = last_records."QID"
-
-                    GROUP BY 1,2,3,4,5,6
-
-                    ORDER BY 1 ASC
-
-                ),
-
-                rates AS (
-
-                    SELECT
-                        *,
-
-                        recent_incorrect_pass / recent_total_asked AS recent_incorrect_pass_rate,
-                        incorrect_pass / total_asked AS incorrect_pass_rate
-
-                    FROM counts
-
-                ),
-
-                ask_chances AS (
-
-                    SELECT
-                        *,
-
-                        CASE WHEN total_asked = 0
-                             THEN 1000000
-                             WHEN last_result IN ('incorrect','pass')
-                             THEN 100000
-                             WHEN total_asked < 3 OR recent_total_asked = 0
-                             THEN 0.05 * (incorrect_pass_rate * incorrect_pass_rate) + 50
-                             WHEN total_asked >= 3 AND incorrect_pass_rate > 0 AND recent_total_asked > 0
-                             THEN 0.05 * (incorrect_pass_rate * incorrect_pass_rate) + 10
-                             WHEN total_asked >= 3 AND incorrect_pass_rate = 0 AND recent_total_asked > 0
-                             THEN 10
-                             ELSE 10
-                             END AS ask_chances
-
-                    FROM rates
-
-                )
-
-                SELECT
-                    *,
-                    ask_chances / SUM(ask_chances) OVER () AS ask_chances_pct
-
-                FROM ask_chances
-
-            """)
-
-            scores_df.to_csv('C:/Documents/Python Programs (csv)/scores.csv', index=False)
-
-            final_question_list = list(choice(scores_df['QID'],
-                                              quiz_length,
-                                              p = scores_df['ask_chances_pct'],
-                                              replace = False))
+            final_question_list = get_final_question_list(quiz_data, records, name, quiz_length)
 
             #########################################################################################################
             # loop through asking and marking each question
