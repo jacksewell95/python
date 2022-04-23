@@ -1,6 +1,7 @@
 import numpy as np
 from numpy.random import choice
 import pandas as pd
+import pandasql as ps
 import random
 from datetime import date
 import datetime
@@ -338,136 +339,77 @@ def play_quiz(folder, name):
             passes = 0
             incorrect = 0
 
-            if name in records['name'].tolist():
+            records = records[records["name"] == name]
 
-                name_records_exist = True
+            last_records = pd.concat([records[records["QID"] == QID].tail(1) for QID in question_list])
+            recent_records = pd.concat([records[records["QID"] == QID].tail(10) for QID in question_list])
 
-                my_records = records[records["name"] == name]
+            scores_df = ps.sqldf(f"""
 
-                all_my_correct_records = my_records[my_records["result"] == "correct"]
-                all_my_incorrect_pass_records = my_records[my_records["result"].isin(["incorrect","pass"])]
+                WITH counts AS (
 
-                all_my_recent_records = my_records.tail(question_list_count)
+                    SELECT
+                        quiz_data."QID",
+                        quiz_data."Question",
+                        quiz_data."Answer",
+                        quiz_data."Topic",
 
-                all_my_recent_correct_records = all_my_recent_records[all_my_recent_records["result"] == "correct"]
-                all_my_recent_incorrect_pass_records = all_my_recent_records[all_my_recent_records["result"].isin(["incorrect","pass"])]
+                        records.name,
+                        last_records.result AS last_result,
 
-                for last_no in (1,10):
+                        COUNT(CASE WHEN recent_records.result IN ('incorrect','pass') THEN 1 ELSE NULL END) AS recent_incorrect_pass,
+                        COUNT(CASE WHEN recent_records.result = 'correct' THEN 1 ELSE NULL END) AS recent_correct,
+                        COUNT(*) AS recent_total_asked,
 
-                    records = pd.concat([my_records[my_records["QID"] == QID].tail(last_no) for QID in question_list])
+                        COUNT(CASE WHEN records.result IN ('incorrect','pass') THEN 1 ELSE NULL END) AS incorrect_pass,
+                        COUNT(CASE WHEN records.result = 'correct' THEN 1 ELSE NULL END) AS correct,
+                        COUNT(*) AS total_asked
 
-                    globals()[f"all_my_last_{last_no}_records"] = records
-                    globals()[f"all_my_last_{last_no}_correct_records"] = records[records["result"] == "correct"]
-                    globals()[f"all_my_last_{last_no}_incorrect_pass_records"] = records[records["result"].isin(["incorrect","pass"])]
+                    FROM quiz_data
 
-            else:
-                name_records_exist = False
+                    LEFT JOIN records ON quiz_data."QID" = records."QID"
+                    LEFT JOIN recent_records ON quiz_data."QID" = recent_records."QID"
+                    LEFT JOIN last_records ON quiz_data."QID" = last_records."QID"
 
-            x_values = []
-            y_values = []
-            scores = []
+                    GROUP BY 1,2,3,4,5,6
 
-            import pandasql as ps
+                    ORDER BY 1 ASC
 
-            scores_sql_df = ps.sqldf(f"""
+                ),
+
+                rates AS (
+
+                    SELECT
+                        *,
+
+                        recent_incorrect_pass / recent_total_asked AS recent_incorrect_pass_rate,
+                        incorrect_pass / total_asked AS incorrect_pass_rate
+
+                    FROM counts
+
+                )
 
                 SELECT
-                    quiz_data."QID"
+                    *,
 
-                FROM quiz_data
+                    CASE WHEN total_asked = 0
+                         THEN 1000000
+                         WHEN last_result IN ('incorrect','pass')
+                         THEN 100000
+                         WHEN total_asked < 3 OR recent_total_asked = 0
+                         THEN 0.05 * (incorrect_pass_rate * incorrect_pass_rate) + 50
+                         WHEN total_asked >= 3 AND incorrect_pass_rate > 0 AND recent_total_asked > 0
+                         THEN 0.05 * (incorrect_pass_rate * incorrect_pass_rate) + 10
+                         WHEN total_asked >= 3 AND incorrect_pass_rate = 0 AND recent_total_asked > 0
+                         THEN 10
+                         ELSE 10
+                         END AS ask_chances
 
-                LEFT JOIN records ON quiz_data."QID" = records."QID"
+                FROM rates
 
             """)
 
-            for QID in question_list:
-
-                question = quiz_data_question_dict[QID]
-
-                try:
-                    last_result = all_my_last_1_record_dict[QID]
-                except:
-                    last_result = "-"
-
-                if name_records_exist:
-
-                    my_correct_records = all_my_last_10_correct_records[all_my_last_10_correct_records["QID"] == QID]
-                    correct = len(my_correct_records["QID"])
-
-                    my_incorrect_pass_records = all_my_last_10_incorrect_pass_records[all_my_last_10_incorrect_pass_records["QID"] == QID]
-                    incorrect_pass = len(my_incorrect_pass_records["QID"])
-
-                    total_asked = incorrect_pass + correct
-
-                    my_recent_correct_records = all_my_recent_correct_records[all_my_recent_correct_records["QID"] == QID]
-                    recent_correct = len(my_recent_correct_records["QID"])
-
-                    my_recent_incorrect_pass_records = all_my_recent_incorrect_pass_records[all_my_recent_incorrect_pass_records["QID"] == QID]
-                    recent_incorrect_pass = len(my_recent_incorrect_pass_records["QID"])
-
-                    recent_total_asked = recent_incorrect_pass + recent_correct
-
-                else:
-
-                    correct = 0
-                    incorrect_pass = 0
-                    total_asked = 0
-                    incorrect_pass_rate = "missing"
-                    recent_correct = 0
-                    recent_incorrect_pass = 0
-                    recent_total_asked = 0
-                    recent_incorrect_pass_rate = ""
-
-                if total_asked > 0 and incorrect_pass > 0:
-                    incorrect_pass_rate = (incorrect_pass / total_asked) * 100
-                elif total_asked > 0 and incorrect_pass == 0:
-                    incorrect_pass_rate = 0
-                else:
-                    incorrect_pass_rate = ""
-
-                if recent_total_asked > 0 and recent_incorrect_pass > 0:
-                    recent_incorrect_pass_rate = (recent_incorrect_pass / recent_total_asked) * 100
-                elif recent_total_asked > 0 and recent_incorrect_pass == 0:
-                    recent_incorrect_pass_rate = 0
-                else:
-                    recent_incorrect_pass_rate = ""
-
-                if total_asked == 0:
-                    ask_chances = 1000000
-                elif last_result in ["incorrect","pass"]:
-                    ask_chances = 100000
-                elif total_asked < 3 or recent_total_asked == 0:
-                    ask_chances = 0.05 * (incorrect_pass_rate ** 2) + 50
-                elif total_asked >= 3 and incorrect_pass_rate > 0 and recent_total_asked > 0:
-                    ask_chances = 0.05 * (incorrect_pass_rate ** 2) + 10
-                elif total_asked >= 3 and incorrect_pass_rate == 0 and recent_total_asked > 0:
-                    ask_chances = 10
-                else:
-                    ask_chances = 10
-
-                row = {
-                    'QID'                        : QID,
-                    'question'                   : question,
-                    'incorrect_pass'             : incorrect_pass,
-                    'correct'                    : correct,
-                    'total_asked'                : total_asked,
-                    'incorrect_pass_rate'        : incorrect_pass_rate,
-                    'recent_incorrect_pass'      : recent_incorrect_pass,
-                    'recent_correct'             : recent_correct,
-                    'recent_total_asked'         : recent_total_asked,
-                    'recent_incorrect_pass_rate' : recent_incorrect_pass_rate,
-                    'last_result'                : last_result,
-                    'ask_chances'                : ask_chances
-                }
-
-                scores.append(row)
-                x_values.append(incorrect_pass_rate)
-                y_values.append(ask_chances)
-
-        #         print(scores)
-
-            scores_df = pd.DataFrame(scores)
-            scores_df.to_csv('C:/Documents/Python Programs (csv)/scores.csv',index=False)
+            scores_df.to_csv('C:/Documents/Python Programs (csv)/scores.csv', index=False)
             scores_df = scores_df.set_index("QID")
             display(HTML(scores_df.to_html()))
 
