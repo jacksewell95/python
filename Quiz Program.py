@@ -750,17 +750,13 @@ def edit_question(q_a_filepath):
                 pass
 
             if column in ["Question","Answer"]:
-                new_cell = input(f'''
+                quiz_data.loc[index_to_modify, column] = add_accents(input(f'''
                 New {column}
-                ''')
+                '''))
             else:
-                new_cell = topic_selection(q_a_filepath, "Select a topic (name/num) or enter new:", "new")
+                quiz_data.loc[index_to_modify, column] = add_accents(topic_selection(q_a_filepath, "Select a topic (name/num) or enter new:", "new"))
 
-            new_cell = add_accents(new_cell)
-
-            #print(quiz_data.loc[ index_to_modify , column ])
-            quiz_data.loc[ index_to_modify , column ] = new_cell
-            #print(quiz_data.loc[ index_to_modify , column ])
+            #print(quiz_data.loc[index_to_modify, column])
 
             row_to_edit = quiz_data[quiz_data.index == index_to_modify]
 
