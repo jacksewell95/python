@@ -643,7 +643,7 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, folder):
             quiz_data.to_csv(f"{folder}{new_q_a_filepath}.csv",index=False)
 #             print("written to csv")
 
-            questions_so_far = questions_so_far + 1
+            questions_so_far += 1
             display(HTML(quiz_data.to_html()))
             another_question_lower = input(f'''
             {add_question_menu}
