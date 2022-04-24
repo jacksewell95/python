@@ -728,17 +728,13 @@ def edit_question(q_a_filepath):
             {another_edit_menu}
             ''').lower()
 
-        elif another_row_modification_lower in ["no","n"]:
-            break
-
         else:
             another_row_modification_lower = input(f'''
             Sorry I didn't understand that
             {another_edit_menu}
             ''').lower()
 
-    else:
-        display(HTML(quiz_data.to_html()))
+    display(HTML(quiz_data.to_html()))
 
 def remove_question(q_a_filepath):
 
