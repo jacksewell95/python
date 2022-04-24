@@ -659,28 +659,6 @@ def create_quiz(folder):
     What is the title of your new quiz?
     '''))
 
-    # quizzes = pd.read_csv(f"{folder}quizzes.csv").to_dict(orient='records')
-    #
-    # new_quiz_record = {
-    #
-    #     'quiz_title'       : new_quiz_title,
-    #     'quiz_title_lower' : new_quiz_title.lower(),
-    #     'q_a_filepath'     : f"{new_quiz_title.lower().replace(' ', '_')}_q_a",
-    #     'records_filepath' : f"{new_quiz_title.lower().replace(' ', '_')}_records",
-    #
-    # }
-    #
-    # quizzes.append(new_quiz_record)
-    #
-    # quizzes_df = pd.DataFrame(quizzes)
-    # quizzes_df.to_csv(f"{folder}quizzes.csv",index=False)
-
-    #####################################################################################
-    # Ask for first question -- initialise questions data -- loop through extra questions
-    #####################################################################################
-
-    # quiz_title = new_quiz_title
-    # quiz_title_lower = new_quiz_title.lower()
     new_q_a_filepath = f"{new_quiz_title.lower().replace(' ', '_')}_q_a"
     new_records_filepath = f"{new_quiz_title.lower().replace(' ', '_')}_records"
 
