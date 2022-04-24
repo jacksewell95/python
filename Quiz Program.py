@@ -399,13 +399,9 @@ def play_quiz(folder, name):
             print(quiz_data)
 
             quiz_data_question_dict = quiz_data.set_index('QID').to_dict()["Question"]
-
-            print(quiz_data_question_dict)
-
             quiz_data_answer_dict = quiz_data.set_index('QID').to_dict()["Answer"]
             quiz_data_topic_dict = quiz_data.set_index('QID').to_dict()["Topic"]
 
-            question_list = quiz_data.index.tolist()
             question_list_count = quiz_data.shape[0]
 
         #     print(f'''
