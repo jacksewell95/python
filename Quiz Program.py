@@ -203,12 +203,6 @@ def topic_selection(q_a_filepath, sentence, exemption):
 
 def import_records(folder, verb):
 
-    global q_a_filepath
-    global q_a_filepath_suffix
-    global records_filepath
-
-    # quizzes = pd.read_csv(f"{folder}quizzes.csv")
-
     filenames = next(os.walk(folder), (None, None, []))[2]
 
     quizzes = pd.DataFrame([{
@@ -276,7 +270,7 @@ def import_records(folder, verb):
             'result'              : None,
         }])
 
-    return records, quizzes, quiz_choice_lower
+    return records, quizzes, quiz_choice_lower, q_a_filepath, records_filepath
 
 def get_final_question_list(quiz_data, records, name, quiz_length):
 
@@ -374,7 +368,7 @@ def play_quiz(folder, name):
     global records
     global topic
 
-    records, quizzes, quiz_choice_lower = import_records(folder, "play")
+    records, quizzes, quiz_choice_lower, q_a_filepath, records_filepath = import_records(folder, "play")
 
     play_loops = 0
     play_again = ""
@@ -759,7 +753,7 @@ def remove_question(q_a_filepath):
 
 def edit_quiz(folder):
 
-    records, quizzes, quiz_choice_lower = import_records(folder, "edit")
+    records, quizzes, quiz_choice_lower, q_a_filepath, records_filepath = import_records(folder, "edit")
 
     quiz_data = pd.read_csv(q_a_filepath)
 
@@ -787,7 +781,7 @@ def edit_quiz(folder):
 
 def plot_records(folder, name):
 
-    records, quizzes, quiz_choice_lower = import_records(folder, "view")
+    records, quizzes, quiz_choice_lower, q_a_filepath, records_filepath = import_records(folder, "view")
 
     if True:
         try:
