@@ -655,7 +655,7 @@ def edit_question(q_a_filepath):
 
     global quiz_data
 
-    quiz_data = pd.read_csv(f"{q_a_filepath}")
+    quiz_data = pd.read_csv(q_a_filepath)
 
     row_edit_menu = "Which row would you like to edit? (Enter QID)"
     field_edit_menu = "Would you like to modify the Question, Answer or Topic?"
@@ -731,7 +731,7 @@ def edit_question(q_a_filepath):
 
             display(HTML(row_to_edit.to_html()))
 
-            quiz_data.to_csv(f"{q_a_filepath}",index=False)
+            quiz_data.to_csv(q_a_filepath, index=False)
 
             row_modifications_made += 1
 
