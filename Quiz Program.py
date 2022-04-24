@@ -365,9 +365,6 @@ def get_final_question_list(quiz_data, records, name, quiz_length):
 
 def play_quiz(folder, name):
 
-    global records
-    global topic
-
     records, quizzes, quiz_choice_lower, q_a_filepath, records_filepath = import_records(folder, "play")
 
     play_loops = 0
@@ -869,7 +866,7 @@ def greeting():
             Sorry, I didn't understand that''')
 
         menu = input(f'''
-        "Would you like to play, view records, create new, or edit? (Enter exit to quit)"
+        Would you like to play, view records, create new, or edit? (Enter exit to quit)
         ''').lower()
 
 greeting()
