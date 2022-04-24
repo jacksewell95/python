@@ -659,8 +659,8 @@ def create_quiz(folder):
     What is the title of your new quiz?
     '''))
 
-    new_q_a_filepath = f"{new_quiz_title.lower().replace(' ', '_')}_q_a"
-    new_records_filepath = f"{new_quiz_title.lower().replace(' ', '_')}_records"
+    new_q_a_filepath = f"{new_quiz_title}_q_a"
+    new_records_filepath = f"{new_quiz_title}_records"
 
     add_question(new_q_a_filepath, "new", new_records_filepath, folder)
 
