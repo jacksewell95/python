@@ -458,13 +458,11 @@ def play_quiz(folder, name):
 
                 question_no += 1
 
-                user_answer = input(f'''
+                user_answer = add_accents(input(f'''
                 {question_no} of {quiz_length}:
                 {question}
 
-                ''')
-
-                user_answer = add_accents(user_answer)
+                '''))
 
                 if isinstance(answer, int):
                     try:
