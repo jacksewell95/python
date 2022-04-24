@@ -634,7 +634,7 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, folder):
             Sorry, I didn't understand that
             {add_question_menu}
             ''').lower()
-    
+
     quiz_data.to_csv(f"{folder}{new_q_a_filepath}.csv",index=False)
 
 def create_quiz(folder):
@@ -746,8 +746,6 @@ def edit_question(q_a_filepath):
     else:
         display(HTML(quiz_data.to_html()))
 
-    return quiz_data
-
 def remove_question(q_a_filepath):
 
     quiz_data = pd.read_csv(q_a_filepath)
@@ -790,7 +788,7 @@ def edit_quiz(folder):
         if edit_menu in ["add","a"]:
             add_question(q_a_filepath_suffix, "edit", records_filepath, folder)
         elif edit_menu in ["edit","ed","e"]:
-            quiz_data = edit_question(q_a_filepath)
+            edit_question(q_a_filepath)
         elif edit_menu in ["remove","r"]:
             quiz_data = remove_question(q_a_filepath)
         elif edit_menu is not None:
