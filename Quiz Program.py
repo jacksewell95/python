@@ -771,8 +771,6 @@ def remove_question(q_a_filepath):
             ''')
             continue
 
-    return quiz_data
-
 def edit_quiz(folder):
 
     records, quizzes, quiz_choice_lower = import_records(folder, "edit")
@@ -790,7 +788,7 @@ def edit_quiz(folder):
         elif edit_menu in ["edit","ed","e"]:
             edit_question(q_a_filepath)
         elif edit_menu in ["remove","r"]:
-            quiz_data = remove_question(q_a_filepath)
+            remove_question(q_a_filepath)
         elif edit_menu is not None:
             print(f'''
             Sorry, I didn't understand that''')
