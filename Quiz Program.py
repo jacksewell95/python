@@ -209,7 +209,7 @@ def import_records(folder, verb):
 
     # quizzes = pd.read_csv(f"{folder}quizzes.csv")
 
-    filenames = next(walk(mypath), (None, None, []))[2]
+    filenames = next(os.walk(folder), (None, None, []))[2]
 
     quizzes = pd.DataFrame([{
         'quiz_title'       : x.replace('_q_a.csv',''),
@@ -396,12 +396,14 @@ def play_quiz(folder, name):
             if topic_choice != 'all':
                 quiz_data = quiz_data[quiz_data["Topic"].str.lower() == str(topic_choice).lower()]
 
-            quiz_data_question_dict = quiz_data.to_dict()["Question"]
+            print(quiz_data)
+
+            quiz_data_question_dict = quiz_data.set_index('QID').to_dict()["Question"]
 
             print(quiz_data_question_dict)
 
-            quiz_data_answer_dict = quiz_data.to_dict()["Answer"]
-            quiz_data_topic_dict = quiz_data.to_dict()["Topic"]
+            quiz_data_answer_dict = quiz_data.set_index('QID').to_dict()["Answer"]
+            quiz_data_topic_dict = quiz_data.set_index('QID').to_dict()["Topic"]
 
             question_list = quiz_data.index.tolist()
             question_list_count = quiz_data.shape[0]
