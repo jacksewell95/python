@@ -14,6 +14,8 @@ from IPython.display import display, HTML
 
 #review all while loops to see if they can be smaller (as with title and topic selections)
 
+# test change made in VS code
+
 def initialise_files(folder):
 
     if not os.path.exists(folder):
