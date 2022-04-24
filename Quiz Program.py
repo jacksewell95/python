@@ -209,18 +209,14 @@ def import_records(folder, verb):
 
     # quizzes = pd.read_csv(f"{folder}quizzes.csv")
 
-    f = []
-    for (dirpath, dirnames, filenames) in os.walk(folder):
-        f.extend(filenames)
-        break
-    print(f)
+    filenames = next(walk(mypath), (None, None, []))[2]
 
     quizzes = pd.DataFrame([{
         'quiz_title'       : x.replace('_q_a.csv',''),
         'quiz_title_lower' : x.replace('_q_a.csv','').lower(),
         'q_a_filepath'     : x.replace('.csv',''),
         'records_filepath' : x.replace('_q_a.csv','_records.csv'),
-    } for x in f if x[-8:] == '_q_a.csv'])
+    } for x in filenames if x[-8:] == '_q_a.csv'])
 
     # JS 23.04.22 reading the q_a files in the directory could be used to create quizzes (df)
     # This would need to include:
@@ -581,7 +577,7 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, folder):
     global topic_choice
 
     if outer_function == "edit":
-        quiz_data = pd.read_csv(f"{q_a_filepath}")
+        quiz_data = pd.read_csv(q_a_filepath)
 #         print(quiz_data)
 #         display(HTML(quiz_data.to_html()))
 
@@ -632,8 +628,6 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, folder):
                 quiz_data.append(new_quiz_data)
             else:
                 quiz_data = [new_quiz_data]
-                print(f'''created DF
-                {quiz_data}''')
 
             quiz_data = pd.DataFrame(quiz_data)
 #             print("indexed on QID")
@@ -814,8 +808,7 @@ def edit_quiz(folder):
             print(f'''
             Sorry, I didn't understand that''')
 #         elif edit_menu == "view":
-#             quiz_data = pd.read_csv(f"{q_a_filepath}")
-#             display(HTML(quiz_data.to_html()))
+#             display(HTML(pd.read_csv(q_a_filepath).to_html()))
 
         edit_menu = input(f'''
         "Would you like to add, edit, or remove questions? (Enter back to return)"
@@ -873,8 +866,6 @@ def plot_records(folder, name):
                 #plt.legend((rects1[0], rects2[0]), ('Men', 'Women'))
                 plt.show()
 #                 plt.bar(my_correct_records, height, width=0.8, bottom=None, \*, align='center', data=None, \*\*kwargs)
-
-
 
 # alphabetise the x_value list before using in the loop to produce the y_value lists
 
