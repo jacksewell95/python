@@ -234,20 +234,16 @@ def import_records(folder, verb):
 
     display(HTML(quiz_titles_series.to_html()))
 
-    quiz_choice_lower = input(f'''
-    Which quiz would you like to {verb}? (Enter name)
-    ''').lower()
+    quiz_choice_lower = None
 
     while quiz_choice_lower not in quiz_titles_lower:
 
-        quiz_choice_lower = input(f'''
-        Sorry, that quiz is not available
-        Enter a title from the list
-        ''').lower()
+        if quiz_choice_lower is not None:
+            print('Sorry, that quiz is not available')
 
-        continue
-    else:
-        pass
+        quiz_choice_lower = input(f'''
+        Which quiz would you like to {verb}? (Enter name)
+        ''').lower()
 
     quizzes_cut = quizzes_idx[quizzes_idx["quiz_title_lower"] == quiz_choice_lower]
     quizzes_cut_lower_idx = quizzes_cut.set_index("quiz_title_lower")
