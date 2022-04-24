@@ -676,16 +676,16 @@ def edit_question(q_a_filepath):
 
         if row_modifications_made == 0 or another_row_modification_lower in ["yes","y"]:
 
-            column = None
+            column_to_modify = None
 
-            while column == None:
+            while column_to_modify is None:
                 if column_to_modify.lower() in ["question","q"]:
                     column = "Question"
                 elif column_to_modify.lower() in ["answer","a"]:
                     column = "Answer"
                 elif column_to_modify.lower() in ["topic","t"]:
                     column = "Topic"
-                else:
+                elif column_to_modify is not None:
                     print("Sorry, I didn't understand that")
 
                 column_to_modify = input(f'''
