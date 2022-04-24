@@ -101,7 +101,7 @@ def initialise_files(folder):
         print()
 
     if not os.path.exists(f"{folder}Peep Show_q_a.csv"):
-        peep_show_q_a = pd.DataFrame(
+        pd.DataFrame(
         [[1, 'In which episode does Mark get bullied by children?', 'Warring Factions', 'Series 1'],
          [2, 'In which episode does Jeremy gurn at his JLB interview?', 'The Interview', 'Series 1'],
          [3, 'In which episode does Mark meet Valerie at a party?', 'On the Pull', 'Series 1'],
@@ -556,7 +556,7 @@ def play_quiz(folder, name):
 def add_question(new_q_a_filepath, outer_function, records_filepath, folder):
 
     if outer_function == "edit":
-        quiz_data = pd.read_csv(q_a_filepath)
+        quiz_data = pd.read_csv(new_q_a_filepath)
 #         print(quiz_data)
 #         display(HTML(quiz_data.to_html()))
 
@@ -674,7 +674,9 @@ def edit_question(q_a_filepath):
 
     row_modifications_made = 0
 
-    while row_modifications_made == 0 or another_row_modification_lower not in ["no","n",""]:
+    another_row_modification_lower = None
+
+    while another_row_modification_lower not in ["no","n",""]:
 
         if row_modifications_made == 0 or another_row_modification_lower in ["yes","y"]:
 
@@ -763,7 +765,7 @@ def edit_quiz(folder):
     while edit_menu not in ["back","b"]:
 
         if edit_menu in ["add","a"]:
-            add_question(q_a_filepath_suffix, "edit", records_filepath, folder)
+            add_question(q_a_filepath, "edit", records_filepath, folder)
         elif edit_menu in ["edit","ed","e"]:
             edit_question(q_a_filepath)
         elif edit_menu in ["remove","r"]:
