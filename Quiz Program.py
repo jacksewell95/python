@@ -566,9 +566,6 @@ def play_quiz(folder, name):
 
 def add_question(new_q_a_filepath, outer_function, records_filepath, folder):
 
-    global quiz_data
-    global topic_choice
-
     if outer_function == "edit":
         quiz_data = pd.read_csv(q_a_filepath)
 #         print(quiz_data)
@@ -637,8 +634,8 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, folder):
             Sorry, I didn't understand that
             {add_question_menu}
             ''').lower()
-    else:
-        quiz_data.to_csv(f"{folder}{new_q_a_filepath}.csv",index=False)
+    
+    quiz_data.to_csv(f"{folder}{new_q_a_filepath}.csv",index=False)
 
 def create_quiz(folder):
 
