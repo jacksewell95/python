@@ -21,25 +21,7 @@ def initialise_files(folder):
         print(f"Initialised {folder}")
         print()
 
-    if not os.path.exists(f"{folder}quizzes.csv"):
-        pd.DataFrame([
-            {
-                "quiz_title"       : 'Red Dwarf',
-                "quiz_title_lower" : 'red dwarf',
-                "q_a_filepath"     : 'red_dwarf_q_a',
-                "records_filepath" : 'red_dwarf_records'
-            },
-            {
-                "quiz_title"       : 'Peep Show',
-                "quiz_title_lower" : 'peep show',
-                "q_a_filepath"     : 'peep_show_q_a',
-                "records_filepath" : 'peep_show_records'
-            },
-        ]).to_csv(f"{folder}quizzes.csv",index=False)
-        print(f"Initialised {folder}quizzes.csv")
-        print()
-
-    if not os.path.exists(f"{folder}red_dwarf_q_a.csv"):
+    if not os.path.exists(f"{folder}Red Dwarf_q_a.csv"):
         pd.DataFrame(
         [[1, 'In which episode does the crew originally get wiped out?', 'The End', 'Series I'],
          [2, 'In which episode does Lister see that there will be twin boys on Red Dwarf?', 'Future Echoes', 'Series I'],
@@ -111,12 +93,12 @@ def initialise_files(folder):
          [68, 'In which episode do Rimmer and Kryten run for Machine President?', 'Mechocracy', 'Series XII'],
          [69, 'In which episode does Lister pay the price for capitalism?', 'M-Corp', 'Series XII'],
          [70, 'In which episode does Rimmer search for a better universe?', 'Skipper', 'Series XII']],
-         columns = ["QID", "Question", "Answer", "Topic"]).to_csv(f"{folder}red_dwarf_q_a.csv",index=False)
+         columns = ["QID", "Question", "Answer", "Topic"]).to_csv(f"{folder}Red Dwarf_q_a.csv",index=False)
 
-        print(f"Initialised {folder}red_dwarf_q_a.csv")
-        pritn()
+        print(f"Initialised {folder}Red Dwarf_q_a.csv")
+        print()
 
-    if not os.path.exists(f"{folder}peep_show_q_a.csv"):
+    if not os.path.exists(f"{folder}Peep Show_q_a.csv"):
         peep_show_q_a = pd.DataFrame(
         [[1, 'In which episode does Mark get bullied by children?', 'Warring Factions', 'Series 1'],
          [2, 'In which episode does Jeremy gurn at his JLB interview?', 'The Interview', 'Series 1'],
@@ -154,9 +136,9 @@ def initialise_files(folder):
          [34, "In which episode does Mark start work at Amigo's", 'The Affair', 'Series 6'],
          [35, 'In which episode do the flatmates have a party?', 'The Party', 'Series 6'],
          [36, 'In which episode does Sophie go into labour?', 'Das Boot', 'Series 6']],
-         columns = ["QID", "Question", "Answer", "Topic"]).to_csv(f"{folder}peep_show_q_a.csv",index=False)
+         columns = ["QID", "Question", "Answer", "Topic"]).to_csv(f"{folder}Peep Show_q_a.csv",index=False)
 
-        print(f"Initialised {folder}peep_show_q_a.csv")
+        print(f"Initialised {folder}Peep Show_q_a.csv")
         print()
 
 def add_accents(word):
@@ -225,12 +207,20 @@ def import_records(folder, verb):
     global q_a_filepath_suffix
     global records_filepath
 
-    quizzes = pd.read_csv(f"{folder}quizzes.csv")
-    quizzes_idx = quizzes.set_index("quiz_title")
-    quiz_titles = quizzes["quiz_title"].to_list()
+    # quizzes = pd.read_csv(f"{folder}quizzes.csv")
 
-    quiz_titles_series = pd.DataFrame(quiz_titles, columns=["Quizzes"])
-    quiz_titles_lower = list(quizzes["quiz_title_lower"])
+    f = []
+    for (dirpath, dirnames, filenames) in os.walk(folder):
+        f.extend(filenames)
+        break
+    print(f)
+
+    quizzes = pd.DataFrame([{
+        'quiz_title'       : x.replace('_q_a.csv',''),
+        'quiz_title_lower' : x.replace('_q_a.csv','').lower(),
+        'q_a_filepath'     : x.replace('.csv',''),
+        'records_filepath' : x.replace('_q_a.csv','_records.csv'),
+    } for x in f if x[-8:] == '_q_a.csv'])
 
     # JS 23.04.22 reading the q_a files in the directory could be used to create quizzes (df)
     # This would need to include:
@@ -239,6 +229,12 @@ def import_records(folder, verb):
     #   2. quiz_title_lower - quiz_title.lower(): 'red dwarf'
     #   3. q_a_filepath - taken straight from q_a file: 'Red Dwarf_q_a'
     #   4. records_filepath - q_a_filepath.replace('_q_a','_records'): 'Red Dwarf_records'
+
+    quizzes_idx = quizzes.set_index("quiz_title")
+    quiz_titles = quizzes["quiz_title"].to_list()
+
+    quiz_titles_series = pd.DataFrame(quiz_titles, columns=["Quizzes"])
+    quiz_titles_lower = list(quizzes["quiz_title_lower"])
 
     display(HTML(quiz_titles_series.to_html()))
 
@@ -405,6 +401,9 @@ def play_quiz(folder, name):
                 quiz_data = quiz_data[quiz_data["Topic"].str.lower() == str(topic_choice).lower()]
 
             quiz_data_question_dict = quiz_data.to_dict()["Question"]
+
+            print(quiz_data_question_dict)
+
             quiz_data_answer_dict = quiz_data.to_dict()["Answer"]
             quiz_data_topic_dict = quiz_data.to_dict()["Topic"]
 
@@ -598,12 +597,10 @@ def add_question(new_q_a_filepath, outer_function, records_filepath, folder):
             if outer_function == "new" and questions_so_far == 0:
                 new_QID = 1
             else:
-                try:
-                    records = pd.read_csv(f"{records_filepath}")
-                    QID_list = quiz_data.index.to_list() + records["QID"].to_list
-                except:
-                    QID_list = quiz_data.index.to_list()
-                new_QID = max(QID_list) + 1
+                if os.path.exists(records_filepath):
+                    new_QID = max(quiz_data['QID'].tolist() + pd.read_csv(records_filepath)['QID'].tolist()) + 1
+                else:
+                    new_QID = max(quiz_data['QID'].tolist()) + 1
 
             new_question = add_accents(input(f'''
             Question:
@@ -662,25 +659,30 @@ def create_quiz(folder):
     What is the title of your new quiz?
     '''))
 
-    quizzes = pd.read_csv(f"{folder}quizzes.csv").to_dict(orient='records')
-
-    new_quiz_record = {
-
-        'quiz_title'       : new_quiz_title,
-        'quiz_title_lower' : new_quiz_title.lower(),
-        'q_a_filepath'     : f"{new_quiz_title.lower().replace(' ', '_')}_q_a",
-        'records_filepath' : f"{new_quiz_title.lower().replace(' ', '_')}_records",
-
-    }
-
-    quizzes.append(new_quiz_record)
-
-    quizzes_df = pd.DataFrame(quizzes)
-    quizzes_df.to_csv(f"{folder}quizzes.csv",index=False)
+    # quizzes = pd.read_csv(f"{folder}quizzes.csv").to_dict(orient='records')
+    #
+    # new_quiz_record = {
+    #
+    #     'quiz_title'       : new_quiz_title,
+    #     'quiz_title_lower' : new_quiz_title.lower(),
+    #     'q_a_filepath'     : f"{new_quiz_title.lower().replace(' ', '_')}_q_a",
+    #     'records_filepath' : f"{new_quiz_title.lower().replace(' ', '_')}_records",
+    #
+    # }
+    #
+    # quizzes.append(new_quiz_record)
+    #
+    # quizzes_df = pd.DataFrame(quizzes)
+    # quizzes_df.to_csv(f"{folder}quizzes.csv",index=False)
 
     #####################################################################################
     # Ask for first question -- initialise questions data -- loop through extra questions
     #####################################################################################
+
+    # quiz_title = new_quiz_title
+    # quiz_title_lower = new_quiz_title.lower()
+    new_q_a_filepath = f"{new_quiz_title.lower().replace(' ', '_')}_q_a"
+    new_records_filepath = f"{new_quiz_title.lower().replace(' ', '_')}_records"
 
     add_question(new_q_a_filepath, "new", new_records_filepath, folder)
 
