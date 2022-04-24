@@ -404,9 +404,6 @@ def play_quiz(folder, name):
 
             question_list_count = quiz_data.shape[0]
 
-        #     print(f'''
-        #     How many questions would you like on {topic_choice}? (1-{question_list_count})''')
-
             quiz_length_menu = f"How many questions would you like on {topic_choice}? (1-{question_list_count})"
 
             while True:
